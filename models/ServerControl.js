@@ -956,7 +956,7 @@ function CLEAR_COLLECTIONS() {
         .then(result => result ? Promise.resolve(true) : false , OnError);
 }
 
-/**
+/***
  * 建立回復伺服器的基本資料。
  * @param {Object} restoreDatas 回復伺服器時所用的資料。
  * @return {Function => Promise} Promise物件。
