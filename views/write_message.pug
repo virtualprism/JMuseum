@@ -1,0 +1,42 @@
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    .container
+      .row
+        .col-xs-12
+          .panel.panel-default
+            .panel-body
+              h2.text-center.mtb-10 撰寫站內訊息
+              form.form-horizontal.col-xs-10.col-xs-push-1
+                .form-group
+                  label.col-sm-2.control-label(for="txtSender") 寄件者
+                  .col-sm-10
+                    input#txtSender.form-control(type="text", value= username, disabled)
+                .form-group
+                  label.col-sm-2.control-label(for="txtRecipient") 收件者
+                  .col-sm-10
+                    button.btn.btn-default.dropdown-toggle(data-toggle="dropdown", aria-haspopup="true", aria-expanded="false")
+                      | 快速選擇 
+                      span.caret
+                    input#txtRecipient.form-control.dropdown-textbox(type="text", value= datas.recipient)
+                    ul#friendList.dropdown-menu
+                      - for (let i = 0; i < datas.friendList.length; i++)
+                        li: a #{datas.friendList[i]}
+                .form-group
+                  label.col-sm-2.control-label(for="txtSubject") 主旨
+                  .col-sm-10
+                    input#txtSubject.form-control(type="text", value="", placeholder="請輸入1~32字間的主旨", minlength="1", maxlength="32")
+                .form-group
+                  label(for="txtaContent") 內文:
+                  textarea#txtaContent.form-control(rows="10", placeholder="請輸入8~500字間的內文", minlength="8", maxlength="500")
+                #alertMessage.row
+                .text-right
+                  label.checkbox-inline(title="若此項勾選，則此訊息只會使收件者看得到")
+                    input#chkPrivate(type="checkbox", value="")
+                    | 私密訊息
+                  button#btnSend.btn.btn-primary(type="button") 寄送訊息
+    include layout/footer.pug
+    script(src="js/write_message_page.js")

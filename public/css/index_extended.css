@@ -1,0 +1,33 @@
+body {
+    background: url("../images/Background.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.thumbnail-feature {
+    min-height: 500px;
+    max-width: 368px;
+    margin: 0 auto;
+}
+
+.blockShadow {
+    border-color: rgba(0, 0, 0, 0.75);
+    border-style: solid;
+    border-width: 4px;
+    box-shadow: 3px 3px 7px black;
+}
+
+.bg-image-paint {
+    background: url("../images/DoPainting.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+img {
+    width: 100%;
+}

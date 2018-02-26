@@ -1,0 +1,34 @@
+mixin collapsePanel(theme)
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title(data-toggle="collapse" data-parent="#accordion" href="#collapse" + theme.id)
+        a.themeTitle #{theme.title}
+      input.btn.btn-primary.btn-sm.btn-selection(type="button", id="theme" + theme.id, name="theme" + theme.id, value="投票", data-index= theme.id)
+    .panel-collapse.collapse(id="collapse" + theme.id)
+      .panel-body
+        .col-md-2.col-xs-3
+          img.img-thumbnail.img-responsive(src= theme.imageURL, alt= theme.title)
+        .col-md-10.col-xs-9
+          .originator 發起者: 
+            span.originator #{theme.originator}
+          label 敘述:
+          p #{theme.narrative}
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    h1.text-center.title #{datas.title}
+    .container
+      .alert.alert-info.text-center(role="alert") 在這一季票選中，每位會員都有#{datas.voteCount}個投票選擇。
+      #accordion.panel-group
+        - let themes = datas.themes;
+        - for (let i = 0; i < themes.length; i++)
+          +collapsePanel(themes[i])
+        #divAlert
+        input#btnSubmit.btn.btn-block.btn-primary.mt-20(type="submit", value="提交")
+    include layout/footer.pug
+    script(src="js/vote_theme_page.js")
+    script
+      | let maxSel = #{datas.voteCount};

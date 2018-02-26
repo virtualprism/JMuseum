@@ -1,0 +1,104 @@
+html { height: 100%; box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
+
+body {
+    background: url("../images/Abstract_2.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+    min-height: 100%;
+}
+
+hr { margin: 10px 0 10px 0; }
+
+/* 頁面內容 */
+div.container {
+    padding-bottom: 32px;
+}
+
+/* 個人簡易資訊面板 */
+div.personal-info-panel { 
+    position: sticky; 
+    position: -webkit-sticky;
+    top: 20px;
+}
+div.tag-list::before, div.tag-list::after {
+    display: table;
+    content: " ";
+}
+div.tag-list::after {
+    clear: both;
+}
+div.thumbnail.personalInfo { margin-bottom: 10px; }
+button > a,
+button > a:hover,
+button > a:active,
+button > a:focus {
+    width: 100%;
+    color: white;
+    font-style: normal;
+    text-decoration: none;
+}
+
+/* 個人好友清單 */
+div.friendList { 
+    height: 250px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-top: 0px;
+    overflow: auto;overflow: auto;
+}
+button.removeFriendBtn { position: absolute; right: 10px; }
+
+/* 文章版面 */
+div.panel-body { position: relative; width: 100%; }
+div.panel-body > img {  max-width: 100%; }
+p, p.tag, p.state { margin: 0; }
+label { margin: 0; }
+
+/* Flex屬性 */
+.flew-container { display: flex; flex-direction: column; }
+.withFlex-1 { display: flex; flex: 1; }
+.withFlex-1 > button { margin-right: 10px; }
+.withFlex-1 > button:last-of-type { margin-right: 0; }
+@media (min-width: 1200px) {
+    .withFlex-1 > a { margin-right: 10px; }
+    .withFlex-1 > a:last-of-type { margin-right: 0; }
+}
+
+@media (max-width: 1199px) {
+    .withFlex-1 > a {
+        padding: 1px 5px;
+        font-size: 12px;
+        line-height: 1.5;
+        border-radius: 3px;
+        margin-right: 10px;
+    }
+    .withFlex-1 > a:last-of-type {
+        margin-right: 0;
+    }
+}
+.flex-1 { flex: 1; }
+
+/* 面板(Panel)之版面調整 */
+div.panel-body > p { margin-top: 5px; }
+div.mainPanel { overflow-y: auto; overflow-x: hidden; }
+div.tab-panel { padding: 0 20px 20px 20px; }
+
+/* 儲存設定的按鈕 */
+button.saveSettingBtn {
+    display: block;
+    margin: 10px 0;
+}
+
+/* 頁尾 */
+.footer {
+    position: absolute;
+    right: 0; bottom: 0;
+    left: 0;
+}

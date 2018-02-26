@@ -1,0 +1,75 @@
+body {
+    background: url("../images/ArtMuseum.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.container-table {
+    height: 100%;
+    display: table;
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.bg-themes, .bg-finishedThemes {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.bg-themes { background: url("../images/Underwater.jpg") no-repeat center center fixed; }
+.bg-finishedThemes { background: url("../images/BlueWater_2.jpg") no-repeat center center fixed; }
+
+.layout-title {
+    min-height: 340px;
+}
+
+/* 主題版面樣式設定 */
+
+div.col-sm-6.col-xs-12 { padding-bottom: 20px; }
+
+div.panel.panel-default img{ width: 100%; box-shadow: 3px 3px 5px black; }
+div.panel.panel-default h3 { margin-top: 10px; }
+div.panel.panel-default { position: relative; height: 100%; }
+
+div.panel-footer { position: absolute; width: 100%; bottom: 0; }
+
+div.panel-body.text-normal.popular-theme { padding-bottom: 80px; }
+div.panel-body { padding-bottom: 60px; }
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+
+/* 已結束的活動 */
+
+div.finished-list {
+    background-color: rgba(84, 84, 84, 0.7);
+    height: 500px;
+    overflow-y: auto; 
+}
+
+a.list-group-item {
+    position: relative;
+}
+
+a.list-group-item label.author {    
+    width: 100px;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.to-right {
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}

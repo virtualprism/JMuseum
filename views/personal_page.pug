@@ -1,0 +1,157 @@
+//- 好友清單
+mixin friendList(list)
+  - for (let i = 0; i < list.length; i++)
+    a.list-group-item(href="/home/" + list[i]) #{list[i]}
+
+//- ==================== 訊息主頁 ==================== -//
+mixin mainInfoDiv(siteMsg, pageUser, visitor)
+  #home.tab-pane.fade.in.active(role="tabpanel")
+    - for (let i = 0; i < siteMsg.length; i++)
+      +mainInfo_Panel(siteMsg[i])
+
+//- 訊息主頁中的訊息面板
+mixin mainInfo_Panel(message)
+  .panel.panel-default
+    .panel-heading: h3.panel-title #{message.title}
+    .panel-body!= message.content
+
+//- ==================== 個人藝廊 ==================== -//
+mixin myGalleryDiv(paintings, userTags)
+  #mygallery.tab-pane.fade(role="tabpanel")
+    .row.withFlex-1
+      .col-xs-3
+        .tag-list
+          h3.text-center - 標籤 -
+          ul.nav.nav-pills.nav-stacked
+            li.active: a(href="#tag-_ALL_", aria-controls="tag-_ALL_", role="tab", data-toggle="tab") 所有標籤
+            +tagList(userTags)
+      .col-xs-9
+        .tab-content.tab-panel
+          +tagContentPanel(paintings, "_ALL_", true)
+          - for (let i = 0; i < userTags.length; i++)
+            +tagContentPanel(paintings, userTags[i], false)
+
+//- 標籤清單
+mixin tagList(userTags)
+  - for (let i = 0; i < userTags.length; i++)
+    li: a(href="#tag-" + userTags[i], aria-controls="tag-" + userTags[i], role="tab", data-toggle="tab") #{userTags[i]}
+
+//- 所選標籤的版面內容
+mixin tagContentPanel(paintings, tagName, isActive)
+  .tab-pane.fade(id="tag-" + tagName, class= (isActive ? "in active" : ""), role="tabpanel")
+    - for (let i = 0; i < paintings.length; i++)
+      if (tagName=="_ALL_" || paintings[i].tags.indexOf(tagName) > -1)
+        +paintingPanel(paintings[i], tagName)
+
+//- 畫作版面
+mixin paintingPanel(painting, tagName)
+  .panel.panel-default
+    .panel-heading: h3.panel-title #{painting.name}
+    .panel-body
+      img.img-thumbnail(src= painting.links, alt= painting.name)
+      label.mt-20 敘述:
+      p #{painting.description}
+      hr
+      p.state: +viewAuthorityTag(painting.viewAuthority)
+      p.tag: +tagListOfPainting(painting.tags)
+    .panel-footer
+      - let workShowcaseURL = "/showcase/personal/" + datas.username + "/" + painting.id + (tagName=="_ALL_" ? "" : "/" + tagName);
+      a.btn.btn-info.btn-sm(href= workShowcaseURL) 瀏覽作品
+      |  
+      if datas.isOwner
+        a.btn.btn-primary.btn-sm(href="/drawing/" + painting.id) 編輯作品
+
+//- 作品的公開權限標籤
+mixin viewAuthorityTag(authority)
+  if (authority==0)
+    span.label.label-success 公開
+  else if (authority==1)
+    span.label.label-warning 半公開
+  else if (authority==2)
+    span.label.label-danger 私人
+  else
+    span.label.label-default 錯誤
+
+//- 畫作上的標籤清單
+mixin tagListOfPainting(tags)
+  - for (let i = 0; i < tags.length; i++)
+    span.label.label-info #{tags[i]}
+    |  
+
+//- ==================== 站內訊息 ==================== -//
+mixin siteEmailDiv(siteMail)
+  #messages.tab-pane.fade(role="tabpanel")
+    - for (let i = 0; i < siteMail.length; i++)
+      +emailPanel(siteMail[i])
+
+//- 站內信的面板
+mixin emailPanel(email)
+  .panel.panel-default
+    .panel-heading: h3.panel-title #{email.title}
+    .panel-body #{email.content}
+    .panel-footer: .row
+      .col-xs-6
+        p
+          label 寄件者:
+          |  #{email.sender}
+      .col-xs-6.text-right
+        p #{email.sendTime.toLocaleString()}
+
+//- ==================== 設定 ==================== -//
+mixin settingDiv(isOwner, autoSaveEnable)
+  if isOwner
+    #settings.tab-pane.fade(role="tabpanel")
+      p: label.checkbox-inline
+        input#chkAutoSaveEnable(type="checkbox", data-toggle="toggle", checked= autoSaveEnable)
+        | 自動啟用繪圖「自動儲存」
+      button#btnSaveSettings.btn.btn-primary.saveSettingBtn(type="button") 儲存設定
+      hr
+      button#btnDeleteAccount.btn.btn-danger(type="button") 刪除帳號
+
+//- ==================== 主文件 ==================== -//
+doctype html
+html
+  head
+    include layout/head.pug
+    link(rel="stylesheet", href="../css/bootstrap-toggle.min.css")
+  body
+    include layout/navbar.pug
+    .container
+      .row.withFlex-1
+        .col-xs-3
+          .panel.panel-default.personal-info-panel
+            .panel-body
+              .thumbnail.personalInfo
+                img(src= datas.userPhotoURL, alt="UserPhoto")
+                .caption
+                  h3.mtb-10 #{datas.nickname || datas.username}
+                  if datas.motto
+                    p #{datas.motto}
+              if datas.isOwner
+                .withFlex-1
+                  a.btn.btn-primary.btn-ms.flex-1(href="/edit_personal_info") 編輯個人資料
+                  a.btn.btn-primary.btn-ms.flex-1(href="/write_message") 撰寫站內訊息
+              h4.text-center - 好友清單 -
+              .list-group.friendList
+                +friendList(datas.friendList)
+        .col-xs-9
+          .panel.panel-default.mainPanel
+            .panel-body
+              ul.nav.nav-tabs(role="tablist")
+                li.active(role="presentation"): a(href="#home", aria-controls="home", role="tab", data-toggle="tab", aria-expanded="true") 訊息主頁
+                li(role="presentation"): a(href="#mygallery", aria-controls="mygallery", role="tab", data-toggle="tab", aria-expanded="false") 個人藝廊
+                li(role="presentation"): a(href="#messages", aria-controls="messages", role="tab", data-toggle="tab", aria-expanded="false") 站內訊息
+                if datas.isOwner
+                  li(role="presentation"): a(href="#settings", aria-controls="settings", role="tab", data-toggle="tab", aria-expanded="false") 設定
+            .row
+              .col-xs-12
+                .tab-content.tab-panel
+                  +mainInfoDiv(datas.siteMsg)
+                  +myGalleryDiv(datas.paintings, datas.userTags)
+                  +siteEmailDiv(datas.siteMail)
+                  +settingDiv(datas.isOwner, datas.autoSaveEnable)
+    //- Footer
+    include layout/footer.pug
+    //- Javascript
+    script(src="/js/bootstrap-toggle.js")
+    script(src="/js/personal_page.js")

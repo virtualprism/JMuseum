@@ -1,0 +1,26 @@
+//- navbar.pug
+nav.navbar.navbar-default
+  div.container-fluid
+    div.navbar-header
+      a.navbar-brand(href="/index") JMuseum
+    ul.nav.navbar-nav
+      li(class= source=="gallery" ? "active" : ""): a(href="/gallery") 傑作藝廊
+      li(class= source=="theme" ? "active" : ""): a(href="/theme") 畫作主題
+      li(class= source=="drawing" ? "active" : ""): a(href="/drawing") 繪圖創作
+      li(class= source=="feedback" ? "active" : ""): a(href="/feedback") 意見回饋
+      if haveSubmitThemeEvent
+        li(class= source=="submit_theme" ? "active" : "")
+          a.color-deepOrange(href="/newtheme") 投稿主題
+      if haveVoteThemeEvent
+        li(class= source=="vote_theme" ? "active" : "")
+          a.color-deepOrange(href="/votetheme") 主題票選
+    ul.nav.navbar-nav.navbar-right
+      if hasLogin
+        li: a 你好! #{username}
+        li(class= (source=="personal_page" && datas.username == username) ? "active" : "")
+          a(href= "/home/" + username) 我的主頁 
+            span.badge #{notices}
+        li: a(href="/signout") 登出
+      else
+        li(class= source=="signup" ? "active" : ""): a(href="/signup") 註冊
+        li(class= source=="login" ? "active" : ""): a(href="/login") 登入

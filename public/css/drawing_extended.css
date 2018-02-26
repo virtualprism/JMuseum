@@ -1,0 +1,190 @@
+body {
+    background: url("../images/Horizon.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+canvas {
+    width: 800px;
+    height: 540px;
+    border: 1px solid black;
+    background-color: white;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+}
+
+div.form-group {
+    margin-top: 10px;
+}
+
+div.whiteTransparent {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+textarea {
+    resize: none;
+}
+
+div.relative { position: relative; }
+
+/* 繪圖區 */
+div.tool-bars {
+    padding: 10px;
+    margin: 20px auto 0 auto;
+}
+
+    /* 自製按鈕元件 */
+input.myBtn {
+    display: inline-block;
+    height: 35px; width: 55px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: white;
+    cursor: default;
+    outline: none;
+
+    transition-duration: 0.25s;
+}
+input.myBtn:hover { background-color: lightgray; }
+
+    /* 顏色選取元件 */
+div.main-color-picker, div.sub-color-picker {
+    display: inline-block;
+    padding: 0 0 0 10px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: white;
+    cursor: default;
+    user-select: none;
+}
+div.sub-color-picker {
+    background-color: #cdffa5;
+    cursor: pointer;
+
+    transition-duration: 0.25s;
+}
+
+input.color-btn {
+    background-color: white;
+    height: 35px; width: 45px;
+    padding: 3px;
+    border-width: 0 0 0 1px;
+    border-style: solid;
+    border-color: gray;
+    border-radius: 10px;
+    margin-left: 5px;
+    cursor: pointer;
+
+    transition-duration: 0.25s;
+}
+input.color-btn:hover { background-color: lightgray; }
+
+    /* 比刷大小調整元件 */
+div.size-group {
+    display: inline-block;
+    position: relative;
+}
+input#sizeDown, input#sizeUp, input#sizeDown10, input#sizeUp10,
+input#strokeSizeDown, input#strokeSizeUp, input#strokeSizeDown10, input#strokeSizeUp10 {
+    background-color: white;
+    height: 35px; width: 30px;
+    border-color: gray;
+    border-style: solid;
+    padding: 3px;
+    margin: 0;
+    cursor: pointer;
+    outline: none;
+
+    transition-duration: 0.25s;
+}
+input#sizeDown, input#strokeSizeDown        { border-width: 1px 1px 1px 0; }
+input#sizeUp, input#strokeSizeUp            { border-width: 1px 0 1px 1px; }
+input#sizeUp10, input#strokeSizeUp10        { border-radius: 0 10px 10px 0; border-width: 1px;  font-weight: 900; color:red; }
+input#sizeDown10, input#strokeSizeDown10    { border-radius: 10px 0 0 10px; border-width: 1px; font-weight: 900; color:red; }
+input#sizeDown:hover, input#sizeUp:hover, input#sizeDown10:hover, input#sizeUp10:hover,
+input#strokeSizeDown:hover, input#strokeSizeUp:hover, input#strokeSizeDown10:hover, input#strokeSizeUp10:hover { background-color: lightgray; }
+label#sizeGroupText, label#strokeSizeGroupText {
+    display: inline-block;
+    background-color: white;
+    height: 35px;
+    padding: 6px 10px 0 10px;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: gray;
+    margin: 0;
+    text-align: center;
+    font-weight: normal;
+}
+
+    /* 比刷模式 */
+div.brush-group { display: inline-block; margin: 10px 0; }
+div.brush-caption, div.brush-group > input {
+    display: inline-block;
+    height: 35px;
+    padding: 0 7px 0 7px;
+    border-color: gray;
+    border-style: solid;
+    background-color: white;
+    outline: none;
+
+    transition-duration: 0.25s;
+}
+div.brush-caption { border-width: 1px; border-radius: 10px 0 0 10px; padding-top: 6px; font-weight: 900; }
+div.brush-group > input { border-width: 1px 1px 1px 0; cursor: pointer; }
+div.brush-group > input:last-child { border-width: 1px 1px 1px 0; border-radius: 0 10px 10px 0; cursor: pointer }
+div.brush-group > input:hover { background-color: lightgray; }
+div.brush-group > input.active{ background-color: #cdffa5; }
+
+#canvasContainer {
+    min-height: 450px;
+}
+
+/* 作品最後調整設定區 */
+    /* 標籤區塊設定 */
+div#tagPanel {
+    padding: 10px;
+}
+    /* 標籤元素 */
+div.labelTag {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0 5px 2px;
+    background-color: lightgray;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+
+    transition-duration: 0.25s;
+}
+div.labelTag.active, div.labelTag.active:hover { background-color: #3281ff; color: white; }
+div.labelTag:hover { background-color: #fffbb2; }
+    /* 檢視作品的權限 */
+div.view-authority {
+    min-width: 240px;
+}
+    /* 作品資訊 */
+table.table {
+    margin-bottom: 0px;
+}
+
+table.table tbody tr:first-child td,
+table.table tbody tr:first-child th {
+    border-width: 0;
+}
+
+    /* 屏蔽版面 */
+div.barrierPanel {
+    position: absolute;
+    top: -20px; bottom: 0; left: 0px;
+    width: 100%;
+    background-color: rgba(32, 32, 32, 0.7); 
+    z-index: 65536;
+}
+
+#btnDelete { display: none; }
+
+canvas#cvsCanvas { width: 800px; height: 450px; }

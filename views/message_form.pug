@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    .container
+      .col-lg-8.col-lg-push-2.col-sm-10.col-sm-push-1.col-xs-12
+        .panel.panel-default
+          .panel-body
+            h2 #{datas.title}
+            p #{datas.content}
+            hr
+            .text-right
+              if datas.button1
+                button#btnAction1.btn.btn-primary #{datas.button1}
+              if datas.button2
+                |  
+                button#btnAction2.btn.btn-primary #{datas.button2}
+    include layout/footer.pug
+    script(type="text/javascript")!= datas.script

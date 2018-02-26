@@ -1,0 +1,122 @@
+//- 以下的mixin部分在「- 上一季的排行名單 -」區中
+mixin lastSeasonDiv(nth, themes)
+  ul.nav.nav-pills
+    - for (let i = 0; i < themes.length; i++)
+      li(class= (i==0 ? "active" : ""))
+        a(data-toggle="pill", href="#LA-" + themes[i].order) #{themes[i].title}
+  .hr-line
+  .tab-content.rankingList
+    - for (let i = 0; i < themes.length; i++)
+      +lastSeasonDiv_ThemeContent(nth, themes[i], i==0)
+
+mixin lastSeasonDiv_ThemeContent(nth, theme, isActive)
+  .tab-pane.fade(id="LA-" + theme.order, class= (isActive ? "in active" : ""))
+    .list-group
+      - let members = theme.participants;
+      - for (let i = 0; i < members.length; i++)
+        - let info = members[i];
+        - let urlLink = "/showcase/activity/" + nth + "/" + theme.title + "/" + info.artist;
+        a.list-group-item(href= urlLink)
+          span.rank #{info.rank}
+          span.artist #{info.artist}
+          | #{info.paintingName}
+          span.postTime #{info.postTime}
+
+//- 以下的mixin部分在「- 歷屆的排行名單 -」區中
+//- 第nth季中的內容, themes為活動, isActive為是否顯示這部分的內容
+mixin prevSeasonTabContent(nth, themes, isActive)
+  div(id="S" + nth, class="tab-pane fade" + (isActive ? " in active" : ""))
+    ul.nav.nav-pills
+      - for (let i = 0; i < themes.length; i++)
+        +prevSeasonContent_Pills(nth, themes[i], i==0)
+    .hr-line
+    .tab-content
+      - for (let i = 0; i < themes.length; i++)
+        +prevSeason_ThemeContent(nth, themes[i], i==0)
+
+//- 第nth季中的內容中，選擇主題的按鈕。
+mixin prevSeasonContent_Pills(nth, theme, isActive)
+  li(class= (isActive ? "active" : ""))
+    a(data-toggle="pill", href="#S" + nth + "-" + theme.order) #{theme.title}
+
+//- 第nth季中的內容中，右側顯示的主題排行情單
+mixin prevSeason_ThemeContent(nth, theme, isActive)
+  div(id="S" + nth + "-" + theme.order, class="tab-pane fade" + (isActive ? " in active" : ""))
+    .list-group
+      - let members = theme.participants;
+      - for (let i = 0; i < members.length; i++)
+        a.list-group-item(href="/showcase/activity/" + nth + "/" + theme.title + "/" + members[i].artist)
+          span.rank #{members[i].rank}
+          span.artist #{members[i].artist}
+          | #{members[i].paintingName}
+          span.postTime #{members[i].postTime}
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    //- Title
+    .container-fluid.container-table.text-shadow.color-white.layout-title
+      .row.text-center.align-items-center.vertical-center-row
+        .col
+          h1.text-bigtitle 傑作藝廊
+          p.text-bigtext 來看一看這些被選出來的高手、大師的傑作吧!
+    //- Master Carousel
+    .container-fluid.masterCarousel
+      .row
+        h1.text-center.color-white.carouselSubtitle 前一季第一名的作品!!
+      .row
+        .col-lg-8.col-lg-push-2.col-md-10.col-md-push-1.col-xs-12
+          #myCarousel.carousel.slide(data-ride="carousel")
+            - var paintings = datas.paintings;
+            ol.carousel-indicators
+              li.active(data-target="#myCarousel" data-slide-to="0")
+              - for (var i = 1; i < paintings.length; i++)
+                li(data-target="#myCarousel" data-slide-to= i)
+            .carousel-inner
+              .item.active
+                img(src= paintings[0].links, alt= paintings[0].name, style="width:100%;")
+                .carousel-caption
+                  h3= paintings[0].name
+                  p Artist - #{paintings[0].artist}
+              - for (var i = 1; i < paintings.length; i++)
+                .item
+                  img(src= paintings[i].links, alt= paintings[i].name, style="width:100%;")
+                  .carousel-caption
+                    h3= paintings[i].name
+                    p Artist - #{paintings[i].artist}
+            a.left.carousel-control(href="#myCarousel", data-slide="prev")
+              span.glyphicon.glyphicon-chevron-left
+              span.sr-only Previous
+            a.right.carousel-control(href="#myCarousel", data-slide="next")
+              span.glyphicon.glyphicon-chevron-right
+              span.sr-only Next
+    //- Prev Ranking
+    - let seasons = datas.seasons;
+    .container-fluid.rankingGroup
+      .row
+        h2.rankingSubtitle - 前一季的排行名單 -
+        .col-md-10.col-md-push-1.col-xs-12
+          .panel.panel-default
+            .panel-body
+              .col-md-10.col-md-push-1.col-xs-12
+                +lastSeasonDiv(seasons[0].nth, seasons[0].themes)
+    //- Prev Seasons
+    .container-fluid.bg-sunset
+      .row
+        h2.previouslySubtitle.text-shadow - 歷屆的排行名單 -
+        .col-md-10.col-md-push-1.col-xs-12
+          .panel.panel-default
+            .panel-body
+              .col-xs-3
+                ul.nav.nav-pills.nav-stacked.seasonList
+                  - for (let i = 1; i < seasons.length; i++)
+                    li.prevSeasonBtn(class= (i==1 ? "active" : ""))
+                      a(data-toggle="pill", href="#S" + seasons[i].nth) 第#{seasons[i].nth}季
+              .col-xs-9
+                .tab-content.previouslyList
+                  - for (let i = 1; i < seasons.length; i++)
+                    +prevSeasonTabContent(seasons[i].nth, seasons[i].themes, i==1)
+    //- Footer
+    include layout/footer.pug

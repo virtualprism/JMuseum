@@ -1,0 +1,35 @@
+{
+  "name": "jmuseum",
+  "version": "1.0.0",
+  "description": "一個讓喜好簡易繪圖的人創作、分享的網站。同時也是我練習前、後端的作品。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Nebula3122",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "*",
+    "connect-flash": "*",
+    "connect-mongo": "*",
+    "cookie-parser": "*",
+    "express": "*",
+    "express-messages": "*",
+    "express-session": "*",
+    "express-validator": "*",
+    "jimp": "*",
+    "mongodb": "*",
+    "mongoose": "*",
+    "multer": "*",
+    "node-schedule": "*",
+    "nodemailer": "*",
+    "passport": "*",
+    "passport-http": "*",
+    "passport-local": "*",
+    "pug": "^2.0.0-beta6",
+    "uuid": "^3.2.1"
+  }
+}

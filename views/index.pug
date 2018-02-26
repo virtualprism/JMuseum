@@ -1,0 +1,101 @@
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    //- "Hot" Paintings
+    .container
+      .row
+        .col-xs-12
+          h1.text-center 來看看大家的作品吧!
+      .row
+        .col-xs-12
+          //- Carousel
+          - var paintings = datas.paintings;
+          #myCarousel.carousel.slide(data-ride="carousel")
+            ol.carousel-indicators
+              li.active(data-target="#myCarousel", data-slide-to="0")
+              - for (var i = 1; i < paintings.length; i++)
+                li(data-target="#myCarousel", data-slide-to= i)
+            .carousel-inner
+              .item.active
+                img(src= paintings[0].links, alt= paintings[0].name, style="width:100%;")
+                .carousel-caption
+                  h3= paintings[0].name
+                  p Artist - #{paintings[0].artist}
+              - for (var i = 1; i < paintings.length; i++)
+                .item
+                  img(src= paintings[i].links, alt= paintings[i].name, style="width:100%;")
+                  .carousel-caption
+                    h3= paintings[i].name
+                    p Artist - #{paintings[i].artist}
+            a.left.carousel-control(href="#myCarousel", data-slide="prev")
+              span.glyphicon.glyphicon-chevron-left
+              span.sr-only Previous
+            a.right.carousel-control(href="#myCarousel", data-slide="next")
+              span.glyphicon.glyphicon-chevron-right
+              span.sr-only Next
+    //- Features
+    .container-fluid.bg-whaleBlue.mt-20.pb-20
+      .row
+        .col-xs-12
+          h2.text-center.text-bigtitle JMuseum
+          p.text-center.text-bigtext 不需要是高手，也不需要很厲害的繪圖技巧，只要你有心、對繪圖懷抱著些興趣，無論是正經或搞笑，這裡都歡迎你!
+      .row.mt-20
+        .col-md-4.col-xs-12.text-center
+          .thumbnail.thumbnail-feature
+            img.mt-20(src="images/point/LightBulb.png", alt="LightBulb")
+            .caption
+              h3.text-center 靈感!
+              p.text-center.text-normal 把你所想到的靈感，用圖畫分享給大家!
+        .col-md-4.col-xs-12.text-center
+          .thumbnail.thumbnail-feature
+            img.mt-20(src="images/point/PaintPalette.png", alt="PaintPalette")
+            .caption
+              h3.text-center 創作!
+              p.text-center.text-normal 不需要多高超的繪圖技巧，只要是你想創作的東西，就畫下去吧!
+        .col-md-4.col-xs-12.text-center
+          .thumbnail.thumbnail-feature
+            img.mt-20(src="images/point/Community.png", alt="Community")
+            .caption
+              h3.text-center 分享!
+              p.text-center.text-normal 不僅僅是你自己欣賞，你還可以與社群上的朋友一起分享!
+    //- Comment
+    .container-fluid.bg-image-paint.pt-20.pb-20
+      .row
+        .col-xs-8.col-xs-push-2.text-shadow-white
+          .row.pt-20.pb-20
+            .col-xs-2
+              img.blockShadow(src="images/HeadshotMan1.png")
+            .col-xs-10
+              blockquote.blockquote.bg-transparent-lightRed
+                p.mb-0 這裡不只可以增強你的畫畫技巧，還可以與你的好友互相切磋，真是很棒。
+                footer.blockquote-footer 美國洛杉磯的
+                  cite(title="Source Title") 洛力克．艾德爾
+          .row.pt-20.pb-20
+            .col-xs-10
+              blockquote.blockquote-reverse.bg-transparent-lightOrange
+                p.mb-0 雖然我只是一位與繪圖毫無相關的外交官員，但透過這個網站來繪圖、交流，真的讓我放鬆了身心。
+                footer.blockquote-footer 波蘭華沙的
+                  cite(title="Source Title") 佛洛斯垂特．霍福
+            .col-xs-2
+              img.blockShadow(src="images/HeadshotMan2.png")
+          .row.pt-20.pb-20
+              .col-xs-2
+                img.blockShadow(src="images/HeadshotMan3.png")
+              .col-xs-10
+                blockquote.blockquote.bg-transparent-lightGreen
+                  p.mb-0 這個地方光是可以分享繪圖就很棒了，而且還可以來做惡搞東西!
+                  footer.blockquote-footer 知名貼圖繪圖家的
+                    cite(title="Source Title") 楊
+          .row.pt-20.pb-20
+            .col-xs-10
+              blockquote.blockquote-reverse.bg-transparent-dodgeBlue
+                p.mb-0 反正就是超棒就對了!
+                footer.blockquote-footer 第一個測試版的使用者
+                  cite(title="Source Title") LostInSea
+            .col-xs-2
+              img.blockShadow(src="images/HeadshotMan4.png")
+    //- Footer
+    include layout/footer.pug

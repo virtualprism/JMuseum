@@ -1,0 +1,13 @@
+//- footer.pug
+footer.footer
+  .container-fluid.bg-grassGreen
+    .row.mt-20
+      .col-xs-8.col-xs-push-2
+        ul.nav.nav-pills
+          li.nav-item(class= source=="gallery" ? "active" : ""): a.color-white(href="/gallery") 傑作藝廊
+          li.nav-item(class= source=="theme" ? "active" : ""): a.color-white(href="/theme") 畫作主題
+          li.nav-item(class= source=="drawing" ? "active" : ""): a.color-white(href="/drawing") 繪圖創作
+          li.nav-item(class= source=="feedback" ? "active" : ""): a.color-white(href="/feedback") 意見回饋
+        p.text-center.color-white Copyright &copy; 2017 by Nebula3122. All rights reserved.
+
+script(src="/js/bootstrap.min.js")

@@ -1,0 +1,76 @@
+//- 「活動中的主題區」的版面
+mixin currentThemesDiv(nth, themes)
+  .row
+    .col-xs-12
+      +themePanel(nth, themes[0], true)
+  - for (var i = 1; i < themes.length; i += 2)
+    .row.row-eq-height
+      .col-sm-6.col-xs-12
+        +themePanel(nth, themes[i], false)
+      if themes[i + 1]
+        .col-sm-6.col-xs-12
+          +themePanel(nth, themes[i + 1], false)
+//- 當前主題區的主題面板
+mixin themePanel(nth, theme, isFirst)
+  .panel.panel-default
+    .panel-heading.text-subbigtext.text-center #{theme.title}
+    .panel-body.text-normal(class= (isFirst ? "popular-theme" : ""))
+      .row
+        div(class= (isFirst ? "col-xs-2" : "col-xs-3")): img(src= theme.imageURL)
+        div(class= (isFirst ? "col-xs-10" : "col-xs-9"))
+          h3
+            label 發起人:
+            |  #{theme.originator}
+          label 描述:
+          p #{theme.narrative}
+    .panel-footer
+      .row
+        .col-xs-1: a.btn.btn-primary(href= "/showcase/activity/" + nth + "/" + theme.title) 瀏覽
+        .col-xs-11.text-right
+          label
+            span.glyphicon.glyphicon-comment(aria-hidden="true" title="討論人數") 
+            |  #{theme.commentCount} 
+          |  | 
+          label
+            span.glyphicon.glyphicon-arrow-up(aria-hidden="true" title="參與人數") 
+            |  #{theme.participantCount} 
+          |  | 
+          label
+            span.glyphicon.glyphicon-eye-open(aria-hidden="true" title="觀看人數") 
+            |  #{theme.views}
+//- 「上一季的主題區」的版面
+mixin lastSeasonThemesDiv(nth, themes, endTime)
+  .col-md-8.col-sm-10.col-md-push-2.col-sm-push-1
+    .list-group.finished-list
+      - for (var i = 0; i < themes.length; i++)
+        a.list-group-item(href= "/showcase/activity/" + nth + "/" + themes[i].title)
+          label.author(title="發起人") #{themes[i].originator}
+          | #{themes[i].title}
+          label.to-right(title="結束時間") #{endTime}
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    - let currentSeason = datas.currentSeason;
+    - let lastSeason = datas.lastSeason;
+    //- Page Title
+    .container-fluid.container-table.text-shadow.color-white.layout-title
+      .row.text-center.align-items-center.vertical-center-row
+        .col
+          h1.text-bigtitle 畫作主題
+          p.text-bigtext 無論你是有靈感、沒靈感，在下方選一個主題來繪圖吧!
+    //- Themes of current season
+    .container-fluid.bg-themes
+      .col-xs-10.col-xs-push-1
+        section.row
+          h2.text-shadow.color-white.text-center - 活動中的主題 -
+          +currentThemesDiv(currentSeason.nth, currentSeason.themes)
+    //- Themes of last season
+    .container-fluid.bg-finishedThemes
+      .row
+        h2.text-shadow.color-white.text-center - 上一季的主題 -
+        +lastSeasonThemesDiv(lastSeason.nth, lastSeason.themes, lastSeason.endTime)
+    //- Footer
+    include layout/footer.pug

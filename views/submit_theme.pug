@@ -1,0 +1,40 @@
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    .container
+      h1.text-center 投稿主題
+      .panel.panel-default
+        .panel-body
+          .row
+            .col-xs-3
+              .thumbnail
+                img#imgThemeImage(src= "images/Example.png", alt="ThemeImage")
+                .caption
+                  h4.text-center 圖示
+                  p 請上傳小於128KB的正方圖示，檔案種類限png或jpg
+                  input#btnUploadImg(type="file")
+                  label.btn.btn-block.btn-primary.btn-sm(for="btnUploadImg") 上傳圖片
+            .col-xs-9
+              form.form-horizontal
+                .form-group
+                  label.col-sm-2.control-label 發起人
+                  .col-sm-10
+                    p.form-control-static #{username}
+                .form-group
+                  label.col-sm-2.control-label(for="txtTheme") 主題名稱
+                  .col-sm-10
+                    input#txtTheme.form-control(type="text", placeholder="請輸入1~32字的主題名稱", minlength="1", maxlength="32", required)
+                .textarea-group
+                  label(for="txtaNarration") 敘述
+                  textarea#txtaNarration.form-control(rows="3", placeholder="請輸入8~100字間的主題敘述 (注意，換行符號將會被忽略)", minlength="8", maxlength="100", required)
+                .alert.alert-warning.mt-20
+                  strong 請注意!
+                  |  不準確、攻擊性、不雅或不愉快，以及違反著作財產權的主題內容是不被允許的。 另外，主題縮圖可以使用預設圖示，若您要更換圖示，則請切合您所設定的主題內容。
+                #divAlert
+                .button-group.text-right.mt-10
+                  button#btnSubmit.btn.btn-primary(type="button") 提交主題
+    include layout/footer.pug
+    script(src="/js/submit_theme_page.js")

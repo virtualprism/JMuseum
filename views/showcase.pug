@@ -1,0 +1,151 @@
+//- ========== 作品展示框 ========== -//
+mixin displayStandDiv(paintings)
+  .row.displayStand
+    .col-lg-8.col-lg-push-2.col-sm-10.col-sm-push-1.col-xs-12
+      #theCarousel.carousel.slide(data-ride="carousel")
+        .carousel-inner
+          - for (let i = 0; i < paintings.length; i++)
+            +displayStand_Painting(paintings[i].links, paintings[i].name, i, i==0)
+        button.btn.left(type="button", href="#theCarousel", data-slide="prev")
+          span.glyphicon.glyphicon-chevron-left
+        button.btn.right(type="button", href="#theCarousel", data-slide="next")
+          span.glyphicon.glyphicon-chevron-right
+      .well.well-sm.pagerWall
+        nav(aria-label="Page navigation")
+          ul.pagination.pager-ul
+            - for (let i = 0; i < paintings.length; i++)
+              +displayStand_Pagination(i, i==0)
+//- 展示框的所有作品
+mixin displayStand_Painting(links, paintingName, index, isActive)
+  .item(class= (isActive ? "active" : ""), data-works-index= index)
+    img(src= links, alt= paintingName, style="width:100%;")
+//- 展示框之下的畫作序按鈕
+mixin displayStand_Pagination(index, isActive)
+  li(class= (isActive ? "active" : ""), data-target="#theCarousel", data-slide-to= index): a #{index + 1}
+//- ========== 作者與作品資訊版面 ========== -//
+mixin informationSectionDiv(paintings, isActivity, userPhotoURL)
+  .row.informationSection
+    .col-md-10.col-md-push-1.col-xs-12
+      //- 作者 與 作品敘述
+      +informationSectionDiv_Info(paintings, isActivity)
+      //- 評論區
+      +informationSection_CommentArea(paintings, userPhotoURL)
+//- ===== 作者與作品敘述 ===== -//
+mixin informationSectionDiv_Info(paintings, isActivity)
+  .panel.panel-default
+    .panel-body
+      .row
+        .col-lg-3.col-md-4.col-xs-4
+          //--if isActivity
+          - for (let i = 0; i < paintings.length; i++)
+            +informationSection_ArtistInfo(paintings[i].artistInfo, i)
+          //--else
+          //--  +informationSection_ArtistInfo(paintings[i].artistInfo, false)
+        .col-lg-9.col-md-8.col-xs-8
+          - for (let i = 0; i < paintings.length; i++)
+            +informationSection_WorksInfo(paintings[i].name, paintings[i].description, paintings[i].userScore, paintings[i].totalScore, i)
+//- 作者資訊方塊
+mixin informationSection_ArtistInfo(info, index)
+  .thumbnail(data-artist-thumbnail= index)
+    a(href= "/home/" + info.name): img(src= info.photoURL, alt= info.name)
+    .caption
+      label 作者
+      h4 #{info.name}
+//- 作品名稱與敘述區塊
+mixin informationSection_WorksInfo(artName, description, userScore, totalScore, index)
+  .panel.panel-default.panel-info(data-works-info= index)
+    .panel-heading: h3.panel-title #{artName}
+    .panel-body #{description}
+    .panel-footer
+      .row
+        .col-xs-6
+          if hasLogin
+            label.control-label(for="ratingBar-" + index) 你的評分:
+            input.rating.rating-loading(id="ratingBar-" + index, name="ratingBar-" + index, value= userScore, data-min="0", data-max="5", data-step="1", data-size="xs")
+        .col-xs-6
+          label.control-label(for="avgRatingBar-" + index) 目前平均分數: #{totalScore}
+          input.rating.rating-loading.staticStars(id="avgRatingBar-" + index, name="avgRatingBar-" + index, value= totalScore, data-min="0", data-max="5", data-step="0.1", data-size="xs", fixed)
+//- ===== 評論區 ===== -//
+mixin informationSection_CommentArea(paintings, userPhotoURL)
+  .panel.panel-default
+    .panel-body
+      +informationSectionDiv_LeaveComment(userPhotoURL, paintings[0].id)
+      +informationSectionDiv_OtherComments(paintings)
+//- 寫下留言區
+mixin informationSectionDiv_LeaveComment(photoURL, firstPaintingId)
+  if hasLogin
+    .row
+      .col-xs-12
+        .media
+          .media-left
+            a: img.media-object.img-responsive.img-thumbnail(src= photoURL, alt= username)
+          .media-body
+            h4.media-heading #{username} 評論:
+            textarea#txtaComment.form-control(rows="4", placeholder="請輸入1~300字間的評論")
+          .media-button
+            button#btnSendComment.btn.btn-primary(type="button") 送出
+    hr
+//- 其他使用者留言
+mixin informationSectionDiv_OtherComments(paintings)
+  .row
+    .col-xs-12
+      h3.comment-group-title - 評論 -
+      - for (let i = 0; i < paintings.length; i++)
+        div(data-comment-group-index= i)
+          - let comments = paintings[i].comments;
+          - for (let j = 0; j < comments.length; j++)
+            +informationSectionDiv_Comment(comments[j])
+//- 單位留言區塊
+mixin informationSectionDiv_Comment(comment)
+  .comment-item
+    img.img-responsive.img-thumbnail.userImage(src= comment.photo, alt= comment.username)
+    .userComment
+      h4 #{comment.username} 的評論:
+      p #{comment.comment}
+    label.commentTime
+      a.report(href="#") 舉報
+      |  #{comment.time.toLocaleString()}
+//- ========== 文件起始 ========== -//
+doctype html
+html
+  head
+    include layout/head.pug
+    link(rel="stylesheet", href="/css/star-rating.min.css")
+  body
+    include layout/navbar.pug
+    .container-fluid.relative
+      .row
+        .col-xs-12.titleBackground
+          if datas.isActivity
+            h1.themeTitle #{datas.themeTitle}
+            h4.originator 發起人 - #{datas.themeOriginator}
+          else
+            h1.themeTitle #{datas.artist} 的個人藝廊
+            h4.originator= (datas.tag ? "標籤: " + datas.tag : "所有作品")
+      +displayStandDiv(datas.paintings)
+      +informationSectionDiv(datas.paintings, datas.isActivity, datas.photoURL)
+    //- Message Dialog
+    #msgDialog.modal.fade(tabindex="-1", role="dialog")
+      .modal-dialog(role="document")
+        .modal-content
+          .modal-header
+            h5#msgDialogTitle.modal-title Title
+          .modal-body
+            p#msgDialogContent Content
+          .modal-footer
+            button.btn.btn-default(type="button", data-dismiss="modal") Close
+    //- Footer
+    include layout/footer.pug
+    script
+      - let paintings = datas.paintings;
+      - let length = paintings.length;
+      | let isActivity = #{datas.isActivity};
+      if datas.isActivity
+        | let nthSeason = #{datas.nthSeason};
+        | let themeOrder = #{datas.themeOrder};
+      | let idList = ["#{paintings[0].id}"
+      - for (let i = 1; i < length; i++)
+        | ,"#{paintings[i].id}"
+      | ];
+    script(src="/js/showcase_page.js")
+    script(src="/js/star-rating.min.js")

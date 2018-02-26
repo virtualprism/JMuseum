@@ -1,0 +1,69 @@
+//- 使用者已經在一個月內回饋 且 回饋的訊息尚在處理中
+mixin hasPostBarrier(hasPostFeedback)
+  if hasPostFeedback
+    .barrierPanel
+      .container.mt-20
+        .panel.panel-default
+          .panel-heading.text-largetext.text-center 您的上一個回饋訊息正在處理中!
+          .panel-body.text-normal.text-center
+            h2.mtb-10 很抱歉!
+            | 很高興您為JMuseum著想，積極地提出您寶貴的意見，愧於我們正在忙碌、處理您以及其他人的回饋訊息或是其他作業，請等待一個月左右再發送另一個回饋訊息。
+          .panel-footer.text-center
+            a.btn.btn-primary(onclick="window.history.back();") 返回上頁
+//- 訪客為登入時的屏障
+mixin guestBarrier(isLogin)
+  if !isLogin
+    .barrierPanel
+      .container.mt-20
+        .panel.panel-default
+          .panel-heading.text-largetext.text-center 請登入或註冊
+          .panel-body.text-normal.text-center
+            h2.mtb-10 加入我們吧!
+            | 我們提供使你放鬆的網站、能揮灑創意的繪圖板，還有與其他繪友一起討論的空間，你還在等什麼呢，登入JMuseum或來註冊加入我們吧!!
+          .panel-footer.text-center
+            a.btn.btn-primary(href="/signup") 註冊
+            |  
+            a.btn.btn-primary(href="/login") 登入
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    //- Feedback
+    .container-fluid.relative
+      .row
+        .col-xs-10.col-xs-push-1
+          .panel.panel-default
+            .panel-heading.text-largetext.text-center 意見回饋
+            .panel-body.text-normal.text-center
+              p: label.text-subbigtext - 站長的話 -
+              p 這是一個為了使大家能透過畫圖來放鬆、互相交流的網站，成立至今不到一載，無論是繪圖板、個人空間或是整題運作，仍有很大的改善、進步空間。
+              p 若你在使用這個網站中有遇到什麼問題、或想要什麼改善，又或是想要給予我們什麼樣的建議或鼓勵，都可以在下方留言喔!
+              div.panel.panel-default
+                .panel-body
+                  .col-xs-8.col-xs-push-2.text-left
+                    table.table.table-condensed
+                      thead: tr: th.text-center(colspan="2") - 回饋資料 -
+                      tbody
+                        tr
+                          th(scope="row") 會員 ID:
+                          td= (username ? username : "*訪客")
+                        tr
+                          th(scope="row") 撰寫日期:
+                          td #{datas.currentDate}
+                    .input-group
+                      span.input-group-addon 主旨
+                      input#txtSubject.form-control(name="txtSubject", type="text", placeholder="請輸入至少1字至64字間的主旨", minlength="1", maxlength="64")
+                    .form-group.mt-20
+                      label(for="txtaContent") 內容:
+                      textarea#txtaContent.form-control(rows="15", placeholder="請輸入至少16字至1000字間的內容", minlength="16", maxlength="1000")
+            .panel-footer.text-right
+              button#btnFeedback.btn.btn-primary(type="button") 提交回饋
+      +hasPostBarrier(hasLogin && datas.hasPostFeedback)
+      +guestBarrier(hasLogin)
+    //- Footer
+    include layout/footer.pug
+    //- Javascript
+    if (hasLogin && !datas.hasPostFeedback)
+      script(src="js/feedback_page.js")

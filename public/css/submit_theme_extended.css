@@ -1,0 +1,41 @@
+html { height: 100%; }
+
+body {
+    background: url("../images/Abstract.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+    min-height: 100%;
+}
+
+input[type="file"] {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+    position: absolute;
+    outline: none;
+	z-index: -1;
+}
+
+input.form-control {
+    margin-right: 20px;
+}
+
+input.form-control[disabled] { 
+    cursor: default;
+}
+
+textarea { 
+    resize: none;
+}
+
+footer {
+    position: absolute;
+    bottom:0; left: 0; right: 0;
+}

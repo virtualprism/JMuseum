@@ -1,0 +1,51 @@
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    .container
+      .panel.panel-default
+        .panel-body
+          h2.text-center.mtb-10 編輯個人資料
+          .row
+            .col-xs-3
+              .thumbnail
+                img#imgUserImg(src= datas.photo, alt="UserImage")
+                .caption
+                  h4.text-center 個人圖像
+                  input#btnUploadImg.hidden(name="userImage", type="file")
+                  label.btn.btn-primary.btn-block.btn-sm(for="btnUploadImg") 更變個人圖像
+            .col-xs-9
+              .row
+                .col-xs-6
+                  .input-group
+                    span#addonLastName.input-group-addon 姓
+                    input#txtLastName.form-control(name="lastName", type="text", value= datas.lastName, placeholder="Last Name", aria-describedby="addonLastName")
+                .col-xs-6
+                  .input-group
+                    span#addonFirstName.input-group-addon 名
+                    input#txtFirstName.form-control(name="firstName", type="text", value= datas.firstName, placeholder="First Name", aria-describedby="addonFirstName")
+              .input-group.mt-10
+                span#addonEmail.input-group-addon Email
+                input#txtEmail.form-control(type="text", value= datas.email, placeholder="Email", aria-describedby="addonEmail", disabled)
+              .input-group.mt-10
+                span#addonUsername.input-group-addon 帳號
+                input#txtUsername.form-control(type="text", value= username, placeholder="Username", aria-describedby="addonUsername", disabled)
+              .input-group.mt-10
+                span#addonPassword.input-group-addon 密碼
+                input#txtPassword.form-control(type="password", value="************", placeholder="Password", aria-describedby="addonPassword", disabled)
+                .input-group-btn
+                  a.btn.btn-warning(href="/newpw") 更變密碼
+              hr
+              .input-group.mt-10
+                span#addonNickname.input-group-addon 暱稱
+                input#txtNickname.form-control(name="nickname", type="text", value= datas.nickname, placeholder="輸入1~16字間的暱稱，若無暱稱則直接顯示帳號名稱", aria-describedby="addonNickname")
+              .input-group.mt-10
+                span#addonMotto.input-group-addon 短言
+                input#txtMotto.form-control(name="motto", type="text", value= datas.motto, placeholder="輸入1~32字間的個人短言，若無短言則不會顯示在個人頁面上", aria-describedby="addonMotto")
+              #divAlert
+              .text-right.mt-10
+                button#btnSave.btn.btn-primary 儲存更變
+    include layout/footer.pug
+    script(src="/js/edit_personal_info_page.js")

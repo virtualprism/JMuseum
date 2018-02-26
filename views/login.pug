@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    .container-fluid.relative
+      form.form-signin(action="/login", method="post", enctype="application/json")
+        h2.form-signin-heading 登入 - Sign In
+        label.sr-only(for="txtUsername") 帳號
+        input#txtUsername.form-control(name="username", type="text", placeholder="帳號", required, autofocus)
+        label.sr-only(for="txtPassword") 密碼
+        input#txtPassword.form-control(name="password", type="password", placeholder="密碼", required)
+        .signInOptions
+          .checkbox.inlineCheckbox
+            label
+              input(name="rememberMe", type="checkbox", value="keep-signin-state")
+              | 保持登入狀態(不建議在公用電腦上)
+          a.forgetPassword(href="#") 忘記密碼?
+        if datas.isLoginFailed
+          .alert.alert-danger
+            | #{datas.loginMessage}
+        button.btn.btn-lg.btn-primary.btn-block(type="submit") 登入
+    //- Footer
+    include layout/footer.pug
+    //- Javascript
+    script(src="js/login_page.js")

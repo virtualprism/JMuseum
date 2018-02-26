@@ -1,0 +1,65 @@
+html { height: 100%; }
+
+body {
+    background: url("../images/Abstract.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+    min-height: 100%;
+}
+
+/* 標題 */
+h1.title {
+    padding: 10px 0;
+    margin: 10px 0 20px 0;
+    text-align: center;
+    background-color: rgba(252, 213, 103, 0.5);
+}
+
+/* Panel 主題 */
+div.panel-heading {
+    position: relative;
+}
+h4.panel-title > a.themeTitle {
+    font-size: 1.2em;
+    text-align: center;
+    text-decoration: none;
+    transition-duration: 0.3s;
+}
+h4.panel-title > a.themeTitle:hover {
+    color: #5a9ced;
+}
+
+/* 選擇按鈕 */
+input.btn-selection {
+    position: absolute;
+    top: 5px; right: 5px;
+}
+input.btn-selected, input.btn-selected:hover, input.btn-selected:active, input.btn-selected:focus {
+    background: #994c00; /* Old browsers */
+    background: -moz-linear-gradient(top, #994c00 0%, #d87e00 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #994c00 0%,#d87e00 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #994c00 0%,#d87e00 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    color: white;
+}
+
+/* 發起者 */
+div.originator {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+span.originator {
+    font-size: 1.2em;
+    font-weight: 900;
+    animation: trans-blue-black 5s infinite;
+}
+
+footer {
+    position: absolute;
+    bottom:0; left: 0; right: 0;
+}

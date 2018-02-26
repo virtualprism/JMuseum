@@ -1,0 +1,80 @@
+doctype html
+html
+  head
+    include layout/head.pug
+  body
+    include layout/navbar.pug
+    .container-fluid.relative
+      //- Sign up form
+      form.form-signin(action="")
+        h2.form-signin-heading 註冊 - Sign Up
+        hr
+        .row
+          .col-xs-6
+            .input-group
+              span.input-group-addon 姓
+              input#txtLName.form-control(type="text", placeholder="Last Name", aria-label="Last Name", aria-describedby="basic-addon1", tabindex="1", required)
+          .col-xs-6
+            .input-group
+              span.input-group-addon 名
+              input#txtFName.form-control(type="text", placeholder="First Name", aria-label="First Name", aria-describedby="basic-addon1", tabindex="2", required)
+        .row.mt-20
+          .col-xs-12
+            .input-group
+              span.input-group-addon: i.glyphicon.glyphicon-envelope
+              input#txtEmail.form-control(type="email", placeholder="Email", aria-label="Email", aria-describedby="basic-addon1", tabindex="3", required)
+        .row.mt-20
+          .col-xs-12
+            .input-group
+              span.input-group-addon: i.glyphicon.glyphicon-user
+              input#txtUsername.form-control(type="text", placeholder="Username", aria-label="Username", aria-describedby="basic-addon1", tabindex="4", required)
+        .row.mt-20
+          .col-xs-12
+            .input-group
+              span.input-group-addon: i.glyphicon.glyphicon-lock
+              input#txtPassword.form-control(type="password", placeholder="Password", aria-label="Password", aria-describedby="basic-addon1", tabindex="5", required)
+        .row.mt-20
+          .col-xs-12
+            .input-group
+              span.input-group-addon: i.glyphicon.glyphicon-lock
+              input#txtConPassword.form-control(type="password", placeholder="Confirm Password", aria-label="Confirm Password", aria-describedby="basic-addon1", tabindex="6", required)
+        .row.mt-20
+          .col-xs-6
+            label.checkbox-inline
+              input#chkJMuseumTerms(type="checkbox")
+              | 我願意遵守JMuseum 條款
+          .col-xs-6.relative
+            a.rightSideText.text-normal(herf="#", data-toggle="modal", data-target="#myModal") JMuseum 條款
+        hr
+        #divErrorMessages
+        button#btnSubmit.btn.btn-lg.btn-primary.btn-block(type="submit", tabindex="7") 註冊
+      //- "JMuseum Terms" Dialog
+      #myModal.modal.fade(tabindex="-1", role="dialog", aria-labelledby="exampleModalLabel", aria-hidden="true")
+        .modal-dialog.modal-lg(role="document")
+          .modal-content
+            .modal-header
+              h3#exampleModalLabel.modal-title JMuseum 條款
+            .modal-body
+              i 最後修改日期: 2017/7/30
+              h4 歡迎使用JMuseum服務!
+              p 在我們為您提供自由自在的繪圖空間、與好友盡興地討論畫作之前，為了維護您、我與其他使用JMuseum的成員們之權益，您必須遵守以下幾項規則(JMuseum服務以下簡稱「服務」)
+              p 請勿濫用「服務」。舉例來說，您不應干擾「服務」運作，亦不得試圖透過我們所提供的介面和操作說明以外的方法存取「服務」。您僅可於法律 (包括適用的出口及再出口管制法律和法規) 允許範圍內使用「服務」。如果您未遵守我們的條款或政策，或是如果我們正在調查疑似違規行為，我們可能會暫停或終止向您提供「服務」。
+              p 使用「服務」並不會將「服務」或您所存取內容的任何智慧財產權授予您。除非相關內容的擁有者同意或法律允許，否則您一律不得使用「服務」中的內容。本條款並未授權您可使用「服務」中所採用的任何品牌標示或標誌。請勿移除、遮蓋或變造「服務」所顯示或隨附顯示的任何法律聲明。
+              p 「服務」中顯示的部分內容並非 JMuseum 所有，這類內容應由其提供實體承擔全部責任。我們可對內容進行審查，以判斷其是否違法或違反 JMuseum 政策，並可移除或拒絕顯示我們合理確信違反 我們政策或法律的內容。不過，這不表示我們一定會對內容進行審查，因此請勿如此認定。
+              p 有關您對「服務」的使用，我們會向您發送服務公告、行政管理訊息和其他資訊；您可取消接收其中某些通訊內容。
+              p JMuseum 的部分「服務」可以在行動裝置上使用。但請勿在會分散注意力的情況下使用這些「服務」，以免違反交通或安全法規。
+              h4 您儲存在「服務」中的內容
+              p 部分「服務」可讓您上傳、提交、儲存、傳送或接收內容；您仍保有相關內容中您擁有的智慧財產權。簡而言之，屬於您的依舊是您的。
+              p 當您將內容上載、提交、儲存或傳送到「服務」，或在「服務」接收內容，或透過「服務」進行以上操作時，即表示您授予 JMuseum (及我們的合作夥伴) 全球通用的授權，可使用、代管、儲存、重製、修改、製作衍生作品、傳播、發佈、公開操作、公開展示與散佈這類內容。您於本項授權授予的權利僅限用於營運、宣傳與改善「服務」，以及開發新的服務。即使您停止使用「服務」，本項授權仍持續具有效力。部分「服務」可讓您存取與移除先前提交至該「服務」的內容。此外，某些「服務」會有條款或設定縮限我們對提交至該類「服務」之內容的使用範圍。請確認您擁有必要權利，可就您提交至「服務」的任何內容授予我們本項授權。
+              p 我們的自動系統會分析您的內容 (包括電子郵件)，以提供與您個人相關的產品功能，例如自訂搜尋結果、個人化廣告，以及垃圾內容與惡意軟體偵測功能。當您使用我們的系統傳送、接收及儲存內容時，系統就會進行分析。
+              p 如果您擁有 JMuseum 帳戶，我們可能會在 JMuseum 的「服務」(包括廣告和其他商業內容) 中顯示您的個人資料名稱和相片，以及您在 JMuseum 或您的 JMuseum 帳戶所連結的第三方應用程式中的動態 (例如 +1、您撰寫的評論以及您發表的留言)。我們會尊重您在 JMuseum 帳戶中選擇的分享或公開程度設定。舉例來說，您可以設定不在廣告中顯示自己的名稱和相片。
+              p 如要進一步瞭解 JMuseum 使用與儲存內容的方式，請參閱相關「服務」的隱私權政策或附加條款。如果您就「服務」提供意見或建議，我們可使用您的意見或建議，對您不負任何義務。
+              h4 在您同意本條款並開始使用本服務之後..
+              p 只要您使用「服務」，即表示您同意本條款，故請詳閱本條款內容。
+              p 由於「服務」種類繁多，因此某些「服務」可能會有附加條款或產品規定 (包括年齡限制)。附加條款將與相關「服務」一併提供；當您使用該「服務」時，該等附加條款即成為您與我們所訂協議的一部分。
+            .modal-footer
+              button.btn.btn-default(type="button", data-dismiss="modal") Close
+    //- Footer
+    include layout/footer.pug
+    //- Javascript
+    script(src="js/signup_page.js")

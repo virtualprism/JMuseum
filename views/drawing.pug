@@ -1,0 +1,199 @@
+//- 畫作的命名、敘述面板
+mixin namingPanel(name, description)
+  .panel.panel-default
+    .panel-body
+      .input-group
+        .input-group-addon 畫作名稱
+        input#txtName.form-control(name="txtName", type="text", value= name, placeholder="至少1字、至多64字", required)
+      .form-group
+        label(for="txtDescription")
+        textarea#txtDescription.form-control(rows="5", placeholder="敘述至少1字、至多300字", required)= description
+//- 設定提示訊息
+mixin setAlertMessage(isLocked, isFinished, activity)
+  if isLocked
+    .alert.alert-danger.text-center 此畫作已被鎖定，無法再更改任何資料。
+  else
+    if isFinished
+      .alert.alert-warning.text-center 此作品已經完成，無法在對畫作內容有任何的更改。
+    if activity
+      .alert.alert-warning.text-center 此畫作已參加公開的活動，因此「訪問權限」鎖定在「公開」的權限之下，無法變更。
+//- 畫作相關設定、資訊版面
+mixin settingsDiv(painting, userTags, isAutoSave)
+  .panel.panel-default
+    .panel-body
+      .col-xs-12
+        label 標籤:
+        #tagPanel.panel.panel-default
+          +setTags(userTags, painting.tags)
+      .col-xs-3.view-authority
+        label 訪問權限:
+        +paintingAuthorityPanel(painting.viewAuthority)
+      .col-xs-5
+        label 資訊:
+        +paintingInfoPanel(painting.createdTime, painting.lastModified, painting.activity, painting.isFinished, painting.isLocked)
+      .col-xs-4
+        label 動作:
+        +paintingActionPanel(painting.isFinished, painting.isLocked, isAutoSave)
+//- 設置畫作標籤
+mixin setTags(userTags, paintingTags)
+  - for (var i = 0; i < userTags.length; i++)
+    .labelTag(class= (paintingTags.indexOf(userTags[i]) > -1 ? "active" : "")) #{userTags[i]}
+//- 畫作的瀏覽權限面板
+mixin paintingAuthorityPanel(authority)
+  .panel.panel-default
+    .panel-body
+      .btn-group(data-toggle="buttons")
+        label#rdoPrivate.btn.btn-danger(class= (authority==2) ? "active" : "")
+          input(type="radio", autocomplete="off", checked= (authority==2))
+          | 私人
+        label#rdoHalfPublic.btn.btn-warning(class= (authority==1) ? "active" : "")
+          input(type="radio", autocomplete="off", checked= (authority==1))
+          | 半公開
+        label#rdoPublic.btn.btn-success(class= (authority==0) ? "active" : "")
+          input(type="radio", autocomplete="off", checked= (authority==0))
+          | 公開
+//- 畫作資訊面板
+mixin paintingInfoPanel(createdTime, lastModified, activity, isFinished, isLocked)
+  .panel.panel-default
+    .panel-body
+      table.table
+        tbody
+          tr
+            th(scope="row") 建立日期:
+            td#tdCreatedTime #{createdTime instanceof Date ? createdTime.toLocaleString() : createdTime}
+          tr
+            th(scope="row") 最後修改:
+            td#tdLastModified #{lastModified instanceof Date ? lastModified.toLocaleString() : lastModified}
+          tr
+            th(scope="row") 參與主題:
+              if activity
+                td= "參與了第" + activity.nthSeason + "季的主題: " + activity.themeName
+              else
+                td 未參與任何活動、主題
+          tr
+            th(scope="row") 畫作狀態:
+              if isFinished
+                td 已完成
+              else if isLocked
+                td 鎖定
+              else
+                td 未完成
+//- 畫作的動作面板
+mixin paintingActionPanel(isFinished, isLocked, isAutoSave)
+  .panel.panel-default
+    .panel-body
+      button#btnSavePainting.btn.btn-default.mr-20(type="button") 儲存畫作
+      label.checkbox-inline
+        input#chkAutoSave(type="checkbox", checked= isAutoSave, data-toggle="toggle", data-size="normal")
+        | 自動儲存
+      br
+      button#btnFinish.btn.btn-success.mt-10(type="button", disabled= (isFinished || isLocked)) 完成畫作
+      buttin#btnPreDelete.btn.btn-danger.mt-10.ml-10(type="button", disabled= !painting.id) 刪除畫作
+//- 提醒訪客註冊或登入的屏障訊息
+mixin guestBarrier(hasLogin)
+  if !hasLogin
+    .barrierPanel
+      .container.mt-20
+        .panel.panel-default
+          .panel-heading.text-largetext.text-center 請登入或註冊
+          .panel-body.text-normal.text-center
+            h2.mtb-10 加入我們吧!
+            | 我們提供使你放鬆的網站、能揮灑創意的繪圖板，還有與其他繪友一起討論的空間，你還在等什麼呢，登入JMuseum或來註冊加入我們吧!!
+          .panel-footer.text-center
+            a.btn.btn-primary(href="/signup") 註冊
+            |  
+            a.btn.btn-primary(href="/login") 登入
+//- 主頁面 -//
+doctype html
+html
+  head
+    include layout/head.pug
+    link(rel="stylesheet", href="/css/bootstrap-toggle.min.css")
+    script(src="/js/p5/p5.min.js")
+  body
+    include layout/navbar.pug
+    - let painting = datas.painting;
+    .container-fluid.relative
+      //- Page Title
+      .container-fluid.container-table.text-shadow.color-white.layout-title
+        .row.text-center.align-items-center.vertical-center-row
+          .col
+            h1.text-bigtitle.pb-20 繪圖創作
+      //- Drawing Board
+      .container
+        //- Naming
+        .row
+          +namingPanel(painting.paintingName, painting.description)
+        //- Drawing Area
+        .row
+          .panel.panel-default.whiteTransparent
+            .row
+              #divAlert
+              .col-xs-10.col-xs-push-1
+                .panel.panel-default.tool-bars
+                  input#resetCanvas.myBtn(type="button", value="重置")
+                  |  
+                  .main-color-picker 填充色 
+                    input#mainColorPicker.color-btn.vertical-center-row(type="color")
+                  |  
+                  .sub-color-picker 筆刷色 
+                    input#subColorPicker.color-btn.vertical-center-row(type="color")
+                  |  
+                  .size-group
+                    input#sizeDown10(type="button", value="-")
+                    input#sizeDown(type="button", value="-")
+                    label#sizeGroupText 填色大小 16
+                    input#sizeUp(type="button", value="+")
+                    input#sizeUp10(type="button", value="+")
+                  |  
+                  .size-group
+                    input#strokeSizeDown10(type="button", value="-")
+                    input#strokeSizeDown(type="button", value="-")
+                    label#strokeSizeGroupText 筆刷粗細 1
+                    input#strokeSizeUp(type="button", value="+")
+                    input#strokeSizeUp10(type="button", value="+")
+                  |  
+                  .brush-group
+                    .brush-caption 筆刷模式
+                    input#normalBrush.active(type="button", value="筆刷")
+                    input#slideBrush(type="button", value="滑筆")
+                    input#featherBrush(type="button", value="燕筆")
+                    input#furBrush(type="button", value="刺筆")
+                    input#stampBrush(type="button", value="印筆")
+                #canvasContainer.panel-body.text-center
+                  canvas#cvsCanvas(width="800", height="450")
+                    | 您的瀏覽器並不支援&ltcanvas&gt標籤。
+        //- Message Alert
+        #divMessage.row
+          +setAlertMessage(painting.isLocked, painting.isFinished, painting.activity)
+        //- Settings
+        .row
+          +settingsDiv(painting, datas.userTags, datas.isAutoSave)
+        //- Message Dialog
+        #msgDialog.modal.fade(role="dialog")
+          .modal-dialog
+            .modal-content
+              .modal-header
+                button.close(type="button", data-dismiss="modal") &times;
+                h4#msgDialog_title.modal-title 訊息
+              .modal-body
+                p#msgDialog_message Message
+              .modal-footer
+                button#btnDelete.btn.btn-danger(type="button", data-dismiss="modal") 刪除
+                button#btnClose.btn.btn-default(type="button", data-dismiss="modal") 關閉
+      +guestBarrier(hasLogin)
+    //- Footer
+    include layout/footer.pug
+    //- Javascript
+    script(src="/js/bootstrap-toggle.js")
+    if hasLogin
+      script
+        | let autoSaveEnable = #{datas.isAutoSave};
+        | let isFinished = #{painting.isFinished};
+        | let paintingId = 
+        if painting.id
+          | "#{painting.id}";
+        else
+          | null;
+      script(src="/js/drawing_tools.js")
+      script(src="/js/drawing_page.js")

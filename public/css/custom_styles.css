@@ -1,0 +1,57 @@
+@keyframes trans-blue-black {
+    0%      { color: black; }
+    45%     { color: #5fb0fc; }
+    55%     { color: #5fb0fc; }
+    100%    { color: black; }
+}
+
+.container-table {
+    height: 100%;
+    display: table;
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+p.footerAnnounce { margin-bottom: 10px; }
+
+.relative { position: relative; }
+
+div.verticalLine { display: inline-flex; height: 2em; margin: 5px 5px 0 5px; padding: 0; border-left-width: 1px; border-left-style: solid; border-left-color: gray; vertical-align: center; }
+
+.text-bigtitle { font-size: 48px; }
+.text-extralargetext { font-size: 42px; }
+.text-extrabigtext { font-size: 38px; }
+.text-largetext { font-size: 32px; }
+.text-bigtext { font-size: 26px; }
+.text-subbigtext { font-size: 22px; }
+.text-normal { font-size: 16px; }
+
+.pb-20 { padding-bottom: 20px; }
+.pt-20 { padding-top: 20px; }
+.mt-20 { margin-top: 20px; }
+.mr-20 { margin-right: 20px; }
+.ml-20 { margin-left: 20px; }
+.mt-10 { margin-top: 10px; }
+.mtb-10 { margin-top: 10px; margin-bottom: 10px; }
+.ml-10 { margin-left: 10px; }
+.noMargin { margin: 0; }
+
+.bg-whaleBlue { background-color: #7ca3ff; }
+.bg-grassGreen { background-color: #2fad29; }
+
+.bg-transparent-lightRed { background-color: rgba(255, 170, 160, 0.6); }
+.bg-transparent-lightOrange { background-color: rgba(255, 209, 150, 0.6); }
+.bg-transparent-dodgeBlue { background-color: rgba(146, 199, 252, 0.6); }
+.bg-transparent-lightGreen { background-color: rgba(195, 255, 160, 0.6); }
+
+.color-white    { color: white !important; }
+.color-deepOrange   { color: #bc8d00 !important;  }
+
+.text-shadow-extra { text-shadow: 3px 3px 5px black; }
+.text-shadow { text-shadow: 2px 2px 3px black; }
+.text-shadow-white-extra { text-shadow: 3px 3px 5px white; }
+.text-shadow-white { text-shadow: 2px 2px 3px white; }
+
+.block-generalShadow { box-shadow: 2px 2px 3px black; }

@@ -1,0 +1,123 @@
+body {
+    background: url("../images/Spotlight.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.container-table {
+    height: 100%;
+    display: table;
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.bg-sunset {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.bg-sunset { background-image: url("../images/Sunset.jpg"); }
+
+.layout-title {
+    min-height: 340px;
+}
+
+div.panel {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 前一季的第一名作品展示 */
+h1.carouselSubtitle {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: rgba(252, 231, 118, 0.7);
+}
+
+div.masterCarousel {
+    padding-bottom: 40px;
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+/* 前一季的排行名單 */
+h2.rankingSubtitle {
+    text-align: center;
+    padding: 10px 0 10px 0;
+    margin-top: 0px;
+    margin-bottom: 30px;
+    background-color: rgba(216, 255, 127, 0.5);
+    color: white;
+}
+
+div.rankingGroup {
+    margin-top: 30px;
+}
+
+div.rankingList {
+    min-height: 500px;
+}
+
+div.hr-line {
+    width: 100%;
+    border-top-width: 2px;
+    border-top-color: lightgray;
+    border-top-style: solid;
+    margin: 5px 0 10px 0;
+}
+
+span.rank {
+    display: inline-block;
+    width: 30px;
+    font-style: italic;
+    font-weight: 900;
+}
+
+@media (min-width: 1200px) { 
+    span.artist {
+        display: inline-block;
+        min-width: 17.5%;
+        padding-right: 10px;
+        font-weight: 900;
+    }
+}
+
+@media (max-width: 1199px) { 
+    span.artist {
+        display: inline-block;
+        min-width: 22.5%;
+        padding-right: 10px;
+        font-weight: 900;
+    }
+}
+
+span.postTime {
+    margin-top: 0.1em;
+    font-weight: 900;
+    float: right;
+    font-size: 0.9em;
+}
+
+
+/* 歷屆的前三名 */
+div.previouslyList {
+    min-height: 500px;
+}
+
+h2.previouslySubtitle {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: white;
+}
+
+li.prevSeasonBtn > a                {background-color: rgba(255, 255, 255, 0.7); }
+li.prevSeasonBtn > a:hover          { background-color: rgba(255, 255, 255, 1); }
+li.prevSeasonBtn.active > a         { background-color: rgba(0, 124, 181, 1); }
+li.prevSeasonBtn.active > a:hover   { background-color: rgba(0, 124, 181, 1); }

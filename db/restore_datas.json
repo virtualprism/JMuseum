@@ -1,0 +1,432 @@
+{
+    "User":
+    [
+        {
+            "username": "JMuseum",
+            "password": "ze2bu6mo9_z",
+            "personalInfo":
+            {
+                "email": "jmuseum@email.com",
+                "lastName": "Museum",
+                "firstName": "John",
+                "nickname": "JMuseum",
+                "motto": "Always do my best!",
+                "photo": "/images/Example.png"
+            },
+            "tags": [],
+            "paintings": [],
+            "siteMsg": [],
+            "siteMail": [],
+            "notices": 0,
+            "friendList": [],
+            "autoSaveEnable": false,
+            "hasPostFeedback": false,
+            "hasPostNewTheme": false,
+            "hasVotedNewTheme": false
+        },
+        {
+            "username": "Dummy",
+            "password": "my7br5cw3",
+            "personalInfo":
+            {
+                "email": "dummy@email.com",
+                "lastName": "Dummy",
+                "firstName": "Mommy",
+                "nickname": "Dummy",
+                "motto": "I’m dummy!",
+                "photo": "/images/Example.png"
+            },
+            "tags": [],
+            "paintings": [],
+            "siteMsg": [],
+            "siteMail": [],
+            "notices": 0,
+            "friendList": [],
+            "autoSaveEnable": false,
+            "hasPostFeedback": false,
+            "hasPostNewTheme": false,
+            "hasVotedNewTheme": false
+        },
+        {
+            "username": "Alterna",
+            "password": "ze3ct5bu7",
+            "personalInfo":
+            {
+                "email": "alterna@email.com",
+                "lastName": "Dummy",
+                "firstName": "Alternative",
+                "nickname": "Alterna",
+                "motto": "I’m alternative dummy!",
+                "photo": "/images/Example.png"
+            },
+            "tags": [],
+            "paintings": [],
+            "siteMsg": [],
+            "siteMail": [],
+            "notices": 0,
+            "friendList": [],
+            "autoSaveEnable": false,
+            "hasPostFeedback": false,
+            "hasPostNewTheme": false,
+            "hasVotedNewTheme": false
+        }
+    ],
+    "Painting":
+    [
+        {
+            "id": "3b337a06-7ed5-47f2-93d9-3d04a1724441",
+            "links": "/db/paintings/3b337a06-7ed5-47f2-93d9-3d04a1724441.png",
+            "name": "Your JMuseum",
+            "description": "The place you can draw!",
+            "artist": "JMuseum",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        },
+        {
+            "id": "59492b35-b4b2-46e2-a608-1b52cfddeb58",
+            "links": "/db/paintings/59492b35-b4b2-46e2-a608-1b52cfddeb58.png",
+            "name": "The Night Sky",
+            "description": "A beautiful night sky impressed me!",
+            "artist": "JMuseum",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        },
+        {
+            "id": "cbc3c3d0-8be5-4114-8904-0faded560e8f",
+            "links": "/db/paintings/cbc3c3d0-8be5-4114-8904-0faded560e8f.png",
+            "name": "Bubbles",
+            "description": "Some white bubbles!",
+            "artist": "JMuseum",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        },
+        {
+            "id": "a5d19465-3f8e-43bb-9e75-b8fa44f12cd1",
+            "links": "/db/paintings/a5d19465-3f8e-43bb-9e75-b8fa44f12cd1.png",
+            "name": "Our JMuseum!",
+            "description": "The place you can enjoy!",
+            "artist": "Dummy",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        },
+        {
+            "id": "edca9118-e254-4671-bd8c-6ae3a507d4b5",
+            "links": "/db/paintings/edca9118-e254-4671-bd8c-6ae3a507d4b5.png",
+            "name": "Night City",
+            "description": "Abstract. Light and night.",
+            "artist": "Dummy",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        },
+        {
+            "id": "f514a6da-a8e8-42df-8ec0-32f98b4d00b7",
+            "links": "/db/paintings/f514a6da-a8e8-42df-8ec0-32f98b4d00b7.png",
+            "name": "Line and white",
+            "description": "White line movement. And black space.",
+            "artist": "Dummy",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        },
+        {
+            "id": "8ada1da7-5f3a-4452-9fef-f6e65de2f004",
+            "links": "/db/paintings/8ada1da7-5f3a-4452-9fef-f6e65de2f004.png",
+            "name": "JMuseum!",
+            "description": "Hola! Our JMuseum!",
+            "artist": "Alterna",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        },
+        {
+            "_id": "<MongoDB Given>",
+            "id": "d6d98d30-d1b5-4528-b2d5-2977290e3687",
+            "links": "/db/paintings/d6d98d30-d1b5-4528-b2d5-2977290e3687.png",
+            "name": "Night Light Raining",
+            "description": "What a beautiful night!",
+            "artist": "Alterna",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        },
+        {
+            "_id": "<MongoDB Given>",
+            "id": "5063c4d3-9108-4d2e-9690-d110c34fd7e7",
+            "links": "/db/paintings/5063c4d3-9108-4d2e-9690-d110c34fd7e7.png",
+            "name": "Spirits and devils eye",
+            "description": "A secret ... something.",
+            "artist": "Alterna",
+            "tags": [],
+            "activity": null,
+            "viewAuthority": 0,
+            "totalScore": 0,
+            "ratings": [],
+            "comments": [],
+            "isFinished": true,
+            "isLocked": false
+        }
+    ],
+    "Season":
+    [
+        {
+            "nth": 1,
+            "themes": []
+        }
+    ],
+    "Theme":
+    [
+        {
+            "order": 0,
+            "title": "JMuseum",
+            "narrative": "Show your love to JMuseum!",
+            "image": "/images/Example.png",
+            "originator": "JMuseum",
+            "participants": [],
+            "views": 32,
+            "commentCount": 0
+        },
+        {
+            "order": 1,
+            "title": "Night View",
+            "narrative": "What is your favorite night view?",
+            "image": "/images/Example.png",
+            "originator": "JMuseum",
+            "participants": [],
+            "views": 32,
+            "commentCount": 0
+        },
+        {
+            "order": 2,
+            "title": "Abstract Art",
+            "narrative": "Very cool and special ideas present in art.",
+            "image": "/images/Example.png",
+            "originator": "JMuseum",
+            "participants": [],
+            "views": 32,
+            "commentCount": 0
+        }
+    ],
+    "ParticipantInfo":
+    [
+        {
+            "id": "3b337a06-7ed5-47f2-93d9-3d04a1724441",
+            "links": "/images/seasons/1/3b337a06-7ed5-47f2-93d9-3d04a1724441.png",
+            "rank": 1,
+            "artist": "JMuseum",
+            "paintingName": "Your JMuseum",
+            "description": "The place you can draw!",
+            "totalScore": 5,
+            "ratings": [],
+            "comments": []
+        },
+        {
+            "id": "59492b35-b4b2-46e2-a608-1b52cfddeb58",
+            "links": "/images/seasons/1/59492b35-b4b2-46e2-a608-1b52cfddeb58.png",
+            "rank": 1,
+            "artist": "JMuseum",
+            "paintingName": "The Night Sky",
+            "description": "A beautiful night sky impressed me!",
+            "totalScore": 5,
+            "ratings": [],
+            "comments": []
+        },
+        {
+            "id": "cbc3c3d0-8be5-4114-8904-0faded560e8f",
+            "links": "/images/seasons/1/cbc3c3d0-8be5-4114-8904-0faded560e8f.png",
+            "rank": 1,
+            "artist": "JMuseum",
+            "paintingName": "Bubbles",
+            "description": "Some white bubbles!",
+            "totalScore": 5,
+            "ratings": [],
+            "comments": []
+        },
+        {
+            "id": "a5d19465-3f8e-43bb-9e75-b8fa44f12cd1",
+            "links": "/images/seasons/1/a5d19465-3f8e-43bb-9e75-b8fa44f12cd1.png",
+            "rank": 2,
+            "artist": "Dummy",
+            "paintingName": "Our JMuseum!",
+            "description": "The place you can enjoy!",
+            "totalScore": 4,
+            "ratings": [],
+            "comments": []
+        },
+        {
+            "id": "edca9118-e254-4671-bd8c-6ae3a507d4b5",
+            "links": "/images/seasons/1/edca9118-e254-4671-bd8c-6ae3a507d4b5.png",
+            "rank": 2,
+            "artist": "Dummy",
+            "paintingName": "Night City",
+            "description": "Abstract. Light and night.",
+            "totalScore": 4,
+            "ratings": [],
+            "comments": []
+        },
+        {
+            "id": "f514a6da-a8e8-42df-8ec0-32f98b4d00b7",
+            "links": "/images/seasons/1/f514a6da-a8e8-42df-8ec0-32f98b4d00b7.png",
+            "rank": 2,
+            "artist": "Dummy",
+            "paintingName": "Line and white",
+            "description": "White line movement. And black space.",
+            "totalScore": 4,
+            "ratings": [],
+            "comments": []
+        },
+        {
+            "id": "8ada1da7-5f3a-4452-9fef-f6e65de2f004",
+            "links": "/images/seasons/1/8ada1da7-5f3a-4452-9fef-f6e65de2f004.png",
+            "rank": 3,
+            "artist": "Alterna",
+            "paintingName": "JMuseum!",
+            "description": "Hola! Our JMuseum!",
+            "totalScore": 3,
+            "ratings": [],
+            "comments": []
+        },
+        {
+            "id": "d6d98d30-d1b5-4528-b2d5-2977290e3687",
+            "links": "/images/seasons/1/d6d98d30-d1b5-4528-b2d5-2977290e3687.png",
+            "rank": 3,
+            "artist": "Alterna",
+            "paintingName": "Night Light Raining",
+            "description": "What a beautiful night!",
+            "totalScore": 3,
+            "ratings": [],
+            "comments": []
+        },
+        {
+            "id": "f514a6da-a8e8-42df-8ec0-32f98b4d00b7",
+            "links": "/images/seasons/1/f514a6da-a8e8-42df-8ec0-32f98b4d00b7.png",
+            "rank": 3,
+            "artist": "Alterna",
+            "paintingName": "Spirits and devils eye",
+            "description": "A secret ... something.",
+            "totalScore": 3,
+            "ratings": [],
+            "comments": []
+        }
+    ],
+    "Participation":
+    [
+        {
+            "nthSeason": 1,
+            "themeName": "JMuseum",
+            "activityRank": 1
+        },
+        {
+            "nthSeason": 1,
+            "themeName": "Night View",
+            "activityRank": 1
+        },
+        {
+            "nthSeason": 1,
+            "themeName": "Abstract Art",
+            "activityRank": 1
+        },
+        {
+            "nthSeason": 1,
+            "themeName": "JMuseum",
+            "activityRank": 2
+        },
+        {
+            "nthSeason": 1,
+            "themeName": "Night View",
+            "activityRank": 2
+        },
+        {
+            "nthSeason": 1,
+            "themeName": "Abstract Art",
+            "activityRank": 2
+        },
+        {
+            "nthSeason": 1,
+            "themeName": "JMuseum",
+            "activityRank": 3
+        },
+        {
+            "nthSeason": 1,
+            "themeName": "Night View",
+            "activityRank": 3
+        },
+        {
+            "nthSeason": 1,
+            "themeName": "Abstract Art",
+            "activityRank": 3
+        }
+    ],
+    "PaintingSpotlight":
+    [
+        {
+            "relation": "index",
+            "paintings": []
+        },
+        {
+            "relation": "gallery",
+            "paintings": []
+        }
+    ],
+    "ServerMessage":
+    [
+        {
+            "title": "歡迎你們來到JMuseum!",
+            "content": "現在你可以自由自在地創作，用你的創意、想法去繪畫出你所想要的圖畫出來吧！也可以去「活動藝廊」看看，有哪些是你中意、喜歡的畫作主題，有的話就選定它吧，以指定的主題作為目標，繪製出想要與大家分享、表達的作品吧！"
+        }
+    ],
+    "ServerStatus":
+    {
+        "submitThemeEvent": false,
+        "voteThemeEvent": false,
+        "currentSeason": 2,
+        "voteCount": 1,
+        "promotionCount": 5,
+        "onSchedule": false,
+        "autoSaveStatus": false
+    }
+}

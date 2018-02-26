@@ -1,0 +1,42 @@
+/* 初始化版面 */
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+/* 設定變景圖 */
+body {
+    background: url("../images/Abstract_4.png") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+/* 調整輸入 */
+form.form-signin {
+    position: relative;
+    margin: 20px auto 20px auto;
+    width: 600px;
+}
+
+div.flexContainer { display: flex; position: relative; }
+div.flex-1 { display: flex; width: auto; flex: 1; }
+div.flex-2 { display: flex; width: auto; flex: 2; }
+
+hr { border-top-width: 2px; border-color: white; box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5); }
+
+a.rightSideText {
+    position: absolute;
+    right: 0;
+    margin-right: 15px;
+}
+
+/* 將尾版設置為絕對位置 */
+footer {
+    position: absolute;
+    left: 0;  right: 0;
+    bottom: 0;
+}
+
