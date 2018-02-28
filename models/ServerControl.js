@@ -927,6 +927,7 @@ function RESTORE_SERVER() {
             .then(CREATE_RESTORING_DATAS(restoreDatas)) // 透過預設的資料來在資料庫中建立還原資料
             .then(CONNECT_RELATIVE_DATAS())             // 將有關聯的資料做連結，並且儲存連結後的資料
             .then(RESTORE_PAINTING_IMAGES())            // 回復預設的繪圖影像資料
+            .then(RESTORE_PUBLIC_IMAGES())              // 將公用的影像資料回復、刪除
     });
 }
 
@@ -1175,6 +1176,151 @@ function RESTORE_PAINTING_IMAGES() {
         return (new Promise(DeleteAllPaintings))
             .then(result => result ? new Promise(CopyDefaultPaintings) : false)
             .then(result => result ? true : false);
+    }
+}
+
+/** 
+ * 回復所有的公用(public)圖片檔案。
+ * @return {Promise} Promise物件。
+ */
+function RESTORE_PUBLIC_IMAGES() {
+    return function (result) {
+        if (!result) return false;
+
+        let imagesDir = global.__dirname + "/public/images";
+
+        /** 刪除所有活動的圖畫影像檔案。(除了第一季) */
+        function DeleteSeasonsPaintings(res, rej) {
+            let seasonDir = imagesDir + "/seasons";
+
+            // 取得所有活動季目錄名稱
+            fileSystem.readdir(seasonDir, (err, dirNames) => {
+                if (err) {
+                    console.log("\n讀取目錄\"%s\"之下所有子目錄名稱時發生了錯誤。請再重試一次。\n", seasonDir);
+                    res(false);
+                    return;
+                }
+
+                dirNames = dirNames.filter(name => name != "1");        // 把第一季的活動圖片保留
+                let seasonIndex = 0, seasonLength = dirNames.length;
+                
+                // 循每一季的目錄去做刪除檔案的動作
+                function ForEachSeasonDir(err) {
+                    if (err) {
+                        console.log("刪除目錄\"%s\"時發生了錯誤。請再重新操作一次。", seasonDir + "/" + dirNames[seasonIndex - 1]);
+                        res(false);
+                    }
+                    else if (seasonIndex < length) { // 若仍有季目錄尚未執行目錄下檔案刪除動作，則繼續執行
+                        let subSeasonDir = seasonDir + "/" + dirNames[seasonIndex];
+                        
+                        // 刪除當前的季目錄。 刪除成功後，再次呼叫ForEachSeasonDir。
+                        function DeleteDir() {
+                            fileSystem.rmdir(subSeasonDir, ForEachSeasonDir);
+                        }
+
+                        // 取得指定一季的目錄之下的所有檔案名稱
+                        fileSystem.readdir(subSeasonDir, (err, fileNames) => {
+                            if (err) {
+                                console.log("\n在目錄\"%s\"之下刪除活動的繪圖影像檔案時發生了錯誤。請再重試一次。\n", subSeasonDir);
+                                res(false);
+                                return;
+                            }
+
+                            let index = 0, length = fileNames.length;
+                            // 刪除目錄之下的所有檔案
+                            function DeleteFiles(err) {
+                                if (err) {
+                                    console.log("\n在目錄\"%s\"之下刪除活動的繪圖影像檔案時發生了錯誤。請再重試一次。\n", subSeasonDir);
+                                    res(false);
+                                }
+                                else if (index < length) {  // 若還有檔案，則繼續刪除
+                                    fileSystem.unlink(subSeasonDir + "/" + fileNames[index], DeleteFile);
+                                    index += 1;
+                                }
+                                else {                      // 若當前目錄下的檔案皆已刪除，則呼叫 DeleteDir() 刪除當前的季目錄。
+                                    DeleteDir();
+                                }
+                            }
+
+                            DeleteFiles();
+                        });
+
+                        seasonIndex += 1;
+                    }
+                    else {      // 若所有季目錄都執行完目錄下的檔案刪除動作，則回調true值表示成功。
+                        res(true);
+                    }
+                }
+
+                ForEachSeasonDir();
+            });
+        }
+
+        /** 刪除所有候選主題的圖像檔案。 */
+        function DeleteNewThemeImages(res, rej) {
+            let newThemeDir = imagesDir + "/newtheme";
+            // 讀取在候選主題圖像目錄之下的所有檔案名稱
+            fileSystem.readdir(newThemeDir, (err, fileNames) => {
+                if (err) {
+                    console.log("\n讀取目錄\"%s\"之下的所有檔案名稱時發生了錯誤。請再重新操作一次。\n", newThemeDir);
+                    res(false);
+                    return;
+                }
+
+                let index = 0, length = fileNames.length;
+                // 刪除候選主題圖像目錄之下的檔案。
+                function DeleteFile(err) {
+                    if (err) {                  // 若有錯誤，則印出錯誤訊息並
+                        console.log("\n刪除在目錄\"%s\"之下的檔案時發生了錯誤。請再重新操作一次。\n", newThemeDir);
+                        res(false);
+                    }
+                    else if (index < length) {
+                        fileSystem.unlink(newThemeDir + "/" + fileNames[index], DeleteFile);
+                        index += 1;
+                    }
+                    else {
+                        res(true);
+                    }
+                }
+
+                DeleteFile();
+            });
+        }
+
+        /** 刪除所有使用者的頭像影像檔案。 */
+        function DeleteUserPhotos(res, rej) {
+            let userPhotosDir = imagesDir + "/user_photos";
+            // 取得所有在使用者頭像目錄之下的所有檔案名稱
+            fileSystem.readdir(userPhotosDir, (err, fileNames) => {
+                if (err) {
+                    console.log("\n在取得目錄\"%s\"之下所有檔案名稱時發生了錯誤。請再重新操作一次。\n", userPhotosDir);
+                    res(false);
+                    return;
+                }
+
+                let index = 0, length = fileNames.length;
+                // 循檔案名稱序來逐一刪除目錄下的所有影像檔案
+                function DeleteFile(err) {
+                    if (err) {                  // 若有錯誤，則將錯誤訊息印出並回調false值表示執行失敗。
+                        console.log("\n在目錄\"%s\"之下刪除檔案時發生了錯誤。請再重新操作一次。\n", userPhotosDir);
+                        res(false);
+                    }
+                    else if (index < length) {  // 若尚未刪除完所有影像檔案，則繼續執行刪除動作
+                        fileSystem.unlink(userPhotosDir + "/" + fileNames[index], DeleteFile);
+                        index += 1;
+                    }
+                    else {                      // 若全數刪除完畢，則回調true表示動作成功
+                        res(true);
+                    }
+                }
+
+                DeleteFile();
+            });
+        }
+
+        return (new Promise(DeleteSeasonsPaintings))
+            .then(result => result ? new Promise(DeleteNewThemeImages) : false)
+            .then(result => result ? new Promise(DeleteUserPhotos) : false);
     }
 }
 
