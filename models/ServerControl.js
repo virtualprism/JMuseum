@@ -926,6 +926,7 @@ function RESTORE_SERVER() {
         CLEAR_COLLECTIONS()                             // 先將資料庫中所有的資料清除
             .then(CREATE_RESTORING_DATAS(restoreDatas)) // 透過預設的資料來在資料庫中建立還原資料
             .then(CONNECT_RELATIVE_DATAS())             // 將有關聯的資料做連結，並且儲存連結後的資料
+            .then(RESTORE_PAINTING_IMAGES())            // 回復預設的繪圖影像資料
     });
 }
 
@@ -1098,6 +1099,85 @@ function CONNECT_RELATIVE_DATAS() {
     }
 }
 
+/**
+ * 還原預設的圖畫影像資料。
+ */
+function RESTORE_PAINTING_IMAGES() {
+    return function (result) {
+        if (!result) return false;   // 若在前幾步驟的操作中已經失敗，則直接回傳false。
+
+        let paintingDir = global.__dirname + "/db/paintings";                       // 存放畫作影像的路徑
+        let restorePaintingDir = global.__dirname + "/db/restore_datas/paintings";  // 
+
+        /** 刪除所有在目錄 "/db/paintings" 之下的繪圖檔案 */
+        function DeleteAllPaintings(res, rej) {
+            // 刪除在專案目錄之下，"/db/paintings"資料夾之下的所有資料
+            fileSystem.readdir(paintingDir, (err, files) => {
+                if (err) {
+                    console.log("在刪除目錄 \"/db/paintings\"之下的所有檔案時發生了錯誤。請再重試一次操作。");
+                    res(false);
+                    return;
+                }
+                let index = 0, length = files.length;   // 刪除檔案的索引值 與 檔案數
+
+                /** 連續地刪除目錄下的所有檔案。 */
+                function DeleteFile(err) {
+                    // 錯誤發生時的處理。
+                    if (err) {
+                        console.log("刪除檔案時發生了錯誤。請再重新試一次操作。");
+                        res(false);
+                    }
+                    // 所有檔案尚未刪除完畢時，繼續向下刪除
+                    else if (index < length) {
+                        fileSystem.unlink(paintingDir + "/" + files[index], DeleteFile);
+                        index += 1;
+                    }
+                    // 刪除完檔案時，回應true表示可以繼續下一步驟。
+                    else {
+                        res(true);
+                    }
+                }
+
+                DeleteFile();
+            });
+        }
+
+        /** 將預設的還原圖畫圖片複製到目錄 "/db/paintings" 之下。 */
+        function CopyDefaultPaintings(res, rej) {
+            // 讀取預設的所有還原圖畫檔案的檔案名稱。
+            fileSystem.readdir(restorePaintingDir, (err, files) => {
+                if (err) {
+                    console.log("讀取預設的還原圖畫檔案目錄時發生了錯誤。請再重試操作一次。");
+                    res(false);
+                    return;
+                }
+                
+                let index = 0, length = files.length;
+                /** 循環地複製指定的資料。 */
+                function CopyFile(err) {
+                    if (err) {                      // 若發生錯誤時，印出錯誤並回調false
+                        console.log("將還原的圖畫檔案複製至db資料夾中時發生了錯誤。請再重新操作一次。");
+                        res(false);
+                    }
+                    else if (index < length) {      // 
+                        fileSystem.copyFile(restorePaintingDir + "/" + files[index], paintingDir + "/" + files[index], CopyFile)
+                        index += 1;
+                    }
+                    else {
+                        res(true);
+                    }
+                }
+                
+                CopyFile();
+            });
+        }
+
+        return (new Promise(DeleteAllPaintings))
+            .then(result => result ? new Promise(CopyDefaultPaintings) : false)
+            .then(result => result ? true : false);
+    }
+}
+
 //#endregion =========================================================================
 
 //#region =============================== Test Command ===============================
@@ -1105,22 +1185,7 @@ function CONNECT_RELATIVE_DATAS() {
  * 測試用的指令動作。
  */
 function Test() {
-    let Rating = DBModels.Rating;
-
-    Rating.bulkWrite([
-        { updateOne: { filter: { username: "TestA" }, update: { score: 1 } } },
-        { updateOne: { filter: { username: "TestB" }, update: { score: 2 } } },
-        { updateOne: { filter: { username: "TestC" }, update: { score: 3 } } }
-    ])
-    .then(
-        (result) => {
-            console.log("OK!");
-            console.log(result);
-        },
-        (reason) => {
-            console.log(reason);
-        }
-    )
+    
 }
 
 
