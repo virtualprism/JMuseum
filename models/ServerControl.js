@@ -56,6 +56,7 @@ function CommandRoutes(line) {
         case "db":          DatabaseFunctions(line, query); break;
         case "restore":     RestoreServer(); break;
         case "help":        HelpInformation(); break;
+        case "test":        Test(); break;
         default:
             console.log("\n錯誤: 找不到指令或巨集。\n");
     }
@@ -922,8 +923,9 @@ function RESTORE_SERVER() {
         if (err) return console.log("\n讀取還原之預設資料時發生了錯誤。請檢查在專案目錄之下的\"/db/restore_datas.json\"是否資料格式正確，或至Github上重新下載一個新的還原預設資料。\n");
         let restoreDatas = JSON.parse(datas);       // 取得原始資料
 
-        // 先將資料庫中所有的資料清除
-        CLEAR_COLLECTIONS().then(CREATE_RESTORING_DATAS(restoreDatas))
+        CLEAR_COLLECTIONS()                             // 先將資料庫中所有的資料清除
+            .then(CREATE_RESTORING_DATAS(restoreDatas)) // 透過預設的資料來在資料庫中建立還原資料
+            .then(CONNECT_RELATIVE_DATAS())             // 將有關聯的資料做連結，並且儲存連結後的資料
     });
 }
 
@@ -985,13 +987,6 @@ function CREATE_RESTORING_DATAS(restoreDatas) {
  * 將有關的回復資料做連結。
  */
 function CONNECT_RELATIVE_DATAS() {
-    let User = DBModels.User, Painting = DBModels.Painting, Season = DBModels.Season;
-    let Theme = DBModels.Theme, ParticipantInfo = DBModels.ParticipantInfo, Participation = DBModels.Participation;
-    let PaintingSpotlight = DBModels.PaintingSpotlight, ServerMessage = DBModels.ServerMessage;
-
-    let userDocs, paintingDocs, seasonDocs, themeDocs;
-    let participantInfoDocs, participationDocs, serverMessageDocs;
-
     /** 當讀取資料庫之資料時發生錯誤的錯誤處理。 */
     function OnLoadError(error) {
         console.log("\n讀取資料庫中的資料時發生錯誤。請檢查是否有連接上MongoDB。\n");
@@ -1001,26 +996,133 @@ function CONNECT_RELATIVE_DATAS() {
     /** 當資料儲存時所發生的錯誤之錯誤處理。 */
     function OnSaveError(error) {
         console.log("\n將資料回存至資料庫時發生了錯誤。請檢查是否有連接上MongoDB。\n");
+        return false;
     }
 
     // 將與使用者有關的繪圖、主頁訊息加入其中
-    DBModels.User.find({}).select("username paintings siteMsg").exec()
-        .then(docs => docs ? (userDocs = docs, DBModels.Painting.find({}).select("artist activity").exec()) : false, OnLoadError)
-        .then(docs => docs ? (paintingDocs = docs, DBModels.Season.findOne({}).select("themes").exec()) : false, OnLoadError)
-        .then(docs => docs ? (seasonDocs = docs, DBModels.Theme.find({}).select("title participants").exec()) : false, OnLoadError)
-        .then(docs => docs ? (themeDocs = docs, DBModels.ParticipantInfo.find({}).select("paintingName").exec()) : false, OnLoadError)
-        .then(docs => docs ? (participantInfoDocs = docs, DBModels.Participation.find({}).select("themeName activityRank").exec()) : false, OnLoadError)
-        .then(docs => docs ? (participationDocs = docs, DBModels.ServerMessage.findOne({}).select("_id").exec()) : false, OnLoadError)
-        .then(docs => docs ? (serverMessageDocs = docs, true) : false, OnLoadError)
-        .then(result => {
-            if (!result) return false;
-            // 建立新的主頁訊息資料，並將其主頁資料加入到使用者資料中
-            let newSiteMessage = { isServerMessage: true, refId: serverMessageDocs._id, postTime: new Date(), isSeen: true, isPrivate: false };
-            userDocs.map((docs) => {
+    return function() {
+        // 紀錄所有從資料庫中讀出的資料
+        let userDocs, paintingDocs, seasonDocs, themeDocs;
+        let participantInfoDocs, participationDocs, serverMessageDocs;
+        let paintingsSpotlightDocs;
+
+        return DBModels.User.find({}).select("username paintings siteMsg").exec()
+            .then(docs => docs ? (userDocs = docs, DBModels.Painting.find({}).select("artist activity").exec()) : false, OnLoadError)
+            .then(docs => docs ? (paintingDocs = docs, DBModels.Season.findOne({}).select("themes").exec()) : false, OnLoadError)
+            .then(docs => docs ? (seasonDocs = docs, DBModels.Theme.find({}).select("title participants").exec()) : false, OnLoadError)
+            .then(docs => docs ? (themeDocs = docs, DBModels.ParticipantInfo.find({}).select("paintingName").exec()) : false, OnLoadError)
+            .then(docs => docs ? (participantInfoDocs = docs, DBModels.Participation.find({}).select("themeName activityRank").exec()) : false, OnLoadError)
+            .then(docs => docs ? (participationDocs = docs, DBModels.ServerMessage.findOne({}).select("_id").exec()) : false, OnLoadError)
+            .then(docs => docs ? (serverMessageDocs = docs, DBModels.PaintingSpotlight.find({}).select("paintings").exec()) : false, OnLoadError)
+            .then(docs => docs ? (paintingsSpotlightDocs = docs, true) : false, OnLoadError)
+            .then(result => {
+                if (!result) return false;
+                // 建立新的主頁訊息資料，並將其主頁資料加入到使用者資料中
+                let userMap = {}, paintingMap = {}, themeMap = {};
+                let newSiteMessage = { isServerMessage: true, refId: serverMessageDocs._id, postTime: new Date(), isSeen: true, isPrivate: false };
+                userDocs.forEach((docs, index, list) => { 
+                    userMap[list[index].username] = docs;
+                    docs.siteMsg.push(newSiteMessage);
+                });
                 
-            });
-        });
+                // 將圖畫_id連結到使用者資料中
+                paintingDocs.forEach((docs) => { 
+                    userMap[docs.artist].paintings.push(docs._id);
+                    paintingMap[docs.name] = docs;
+                });
+                
+                // 將 Participation 資料連結到 Painting 資料上
+                participationDocs.forEach((docs) => {
+                    if (docs.activityRank == 1) {
+                        switch(docs.themeName) {
+                            case "JMuseum":     paintingMap["Your JMuseum"].activity = docs._id;    break;
+                            case "Night View":  paintingMap["The Night Sky"].activity = docs._id;   break;
+                            default:            paintingMap["Bubbles"].activity = docs._id;         break;
+                        }
+                    }
+                    else if (docs.activityRank == 2) {
+                        switch(docs.themeName) {
+                            case "JMuseum":     paintingMap["Our JMuseum!"].activity = docs._id;    break;
+                            case "Night View":  paintingMap["Night City"].activity = docs._id;      break;
+                            default:            paintingMap["Line and white"].activity = docs._id;  break;
+                        }
+                    }
+                    else {
+                        switch(docs.themeName) {
+                            case "JMuseum":     paintingMap["JMuseum!"].activity = docs._id;                break;
+                            case "Night View":  paintingMap["Night Light Raining"].activity = docs._id;     break;
+                            default:            paintingMap["Spirits and devils eye"].activity = docs._id;  break;
+                        }
+                    }
+                });
+
+                // 將 JMuseum 的三個作品之_id連結到 PaintingSpotlight 資料上
+                paintingsSpotlightDocs.forEach((docs) => { 
+                    docs.paintings = [paintingMap["JMuseum!"]._id, paintingMap["The Night Sky"]._id, paintingMap["Bubbles"]._id];
+                });
+                
+                // 將所有 Theme 對應到 themeMap 上，並且將每個的_id連結到 Season 資料上
+                seasonDocs.themes = themeDocs.map((docs) => {
+                    themeMap[docs.title] = docs;
+                    return docs._id;
+                });
+
+                // 將指定的參加訊息(ParticipantInfo)資料連接到 Theme 之中
+                participantInfoDocs.forEach((docs) => {
+                    switch(docs.paintingName) {
+                        case "Your JMuseum":
+                        case "Our JMuseum!":
+                        case "JMuseum!":
+                            themeMap["JMuseum"].participants.push(docs._id);
+                            break;
+                        case "The Night Sky":
+                        case "Night City":
+                        case "Night Light Raining":
+                            themeMap["Night View"].participants.push(docs._id);
+                            break;
+                        case "Bubbles":
+                        case "Line and white":
+                        case "Spirits and devils eye":
+                            themeMap["Abstract Art"].participants.push(docs._id);
+                    }
+                });
+
+                return true;
+            })
+            .then(result => result ? DBModels.User.bulkWrite(userDocs.map(docs => { return { filter: { _id: docs._id }, update: docs }; })) : false)
+            .then(result => result ? DBModels.Painting.bulkWrite(paintingDocs.map(docs => { return { filter: { _id: docs._id }, update: docs };})) : false, OnSaveError)
+            .then(result => result ? seasonDocs.save() : false, OnSaveError)
+            .then(result => result ? DBModels.Theme.bulkWrite(themeDocs.map(docs => { return { filter: { _id: docs._id}, update: docs }; })) : false, OnSaveError)
+            .then(result => result ? DBModels.PaintingSpotlight.bulkWrite(paintingsSpotlightDocs.map(docs => { return { filter: { _id: docs._id }, update: docs }; })) : false, OnSaveError)
+            .then(result => result ? true : false, OnSaveError);
+    }
 }
+
+//#endregion =========================================================================
+
+//#region =============================== Test Command ===============================
+/** 
+ * 測試用的指令動作。
+ */
+function Test() {
+    let Rating = DBModels.Rating;
+
+    Rating.bulkWrite([
+        { updateOne: { filter: { username: "TestA" }, update: { score: 1 } } },
+        { updateOne: { filter: { username: "TestB" }, update: { score: 2 } } },
+        { updateOne: { filter: { username: "TestC" }, update: { score: 3 } } }
+    ])
+    .then(
+        (result) => {
+            console.log("OK!");
+            console.log(result);
+        },
+        (reason) => {
+            console.log(reason);
+        }
+    )
+}
+
 
 //#endregion =========================================================================
 

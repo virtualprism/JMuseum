@@ -3,7 +3,7 @@
     [
         {
             "username": "JMuseum",
-            "password": "ze2bu6mo9_z",
+            "password": "",
             "personalInfo":
             {
                 "email": "jmuseum@email.com",
@@ -26,7 +26,7 @@
         },
         {
             "username": "Dummy",
-            "password": "my7br5cw3",
+            "password": "",
             "personalInfo":
             {
                 "email": "dummy@email.com",
@@ -49,7 +49,7 @@
         },
         {
             "username": "Alterna",
-            "password": "ze3ct5bu7",
+            "password": "",
             "personalInfo":
             {
                 "email": "alterna@email.com",
@@ -179,7 +179,6 @@
             "isLocked": false
         },
         {
-            "_id": "<MongoDB Given>",
             "id": "d6d98d30-d1b5-4528-b2d5-2977290e3687",
             "links": "/db/paintings/d6d98d30-d1b5-4528-b2d5-2977290e3687.png",
             "name": "Night Light Raining",
@@ -195,7 +194,6 @@
             "isLocked": false
         },
         {
-            "_id": "<MongoDB Given>",
             "id": "5063c4d3-9108-4d2e-9690-d110c34fd7e7",
             "links": "/db/paintings/5063c4d3-9108-4d2e-9690-d110c34fd7e7.png",
             "name": "Spirits and devils eye",
