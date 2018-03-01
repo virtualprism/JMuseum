@@ -54,7 +54,7 @@ function CommandRoutes(line) {
         case "act":         ActivityFunction(query); break;
         case "servmsg":     ServMessageFunction(query); break;
         case "db":          DatabaseFunctions(line, query); break;
-        case "restore":     RestoreServer(); break;
+        case "restore":     ServerRestoreCommand(); break;
         case "help":        HelpInformation(); break;
         case "test":        Test(); break;
         default:
@@ -873,9 +873,9 @@ function ServerRestoreCommand() {
     /** 再三地確認是否要恢復JMuseum伺服器。 */
     function ConfirmRestore(line) {
         if (line == "Y" || line == "y") {
-            time -= 1;
+            times -= 1;
             if (times > 0) {
-                console.log("\n是否確定要將JMuseum伺服器恢復到最初始的狀態? (為了確保非為輸入錯誤，因此會詢問%s次) (Y/N)", times);
+                console.log("\n是否確定要將JMuseum伺服器恢復到最初始的狀態? (Y/N) (為了確保非為輸入錯誤，因此會詢問 %s 次) ", times);
             }
             else {
                 RESTORE_SERVER();
@@ -886,11 +886,11 @@ function ServerRestoreCommand() {
             CurrentOperationFunc = CommandRoutes;
         }
         else {
-            console.log("\n是否確定要將JMuseum伺服器恢復到最初始的狀態? (為了確保非為輸入錯誤，因此會詢問%s次)", times);
+            console.log("\n是否確定要將JMuseum伺服器恢復到最初始的狀態? (Y/N) (為了確保非為輸入錯誤，因此會詢問 %s 次)", times);
         }
     }
 
-    console.log("\n是否確定要將JMuseum伺服器恢復到最初始的狀態? (為了確保非為輸入錯誤，因此會詢問%s次)", times);
+    console.log("\n是否確定要將JMuseum伺服器恢復到最初始的狀態? (Y/N) (為了確保非為輸入錯誤，因此會詢問 %s 次)", times);
     CurrentOperationFunc = ConfirmRestore;
 }
 
@@ -918,8 +918,13 @@ function HelpInformation() {
  */
 function RESTORE_SERVER() {
     // 讀取還原預設資料檔案
-    fileSystem.readFile(global.__dirname + "/db/restore_datas.json", { encoding: "utf8" }, (err, datas) => {
-        if (err) return console.log("\n讀取還原之預設資料時發生了錯誤。請檢查在專案目錄之下的\"/db/restore_datas.json\"是否資料格式正確，或至Github上重新下載一個新的還原預設資料。\n");
+    fileSystem.readFile(global.__dirname + "/db/restore_datas/restore_datas.json", { encoding: "utf8" }, (err, datas) => {
+        if (err) {
+            console.log("\n讀取還原之預設資料時發生了錯誤。請檢查在專案目錄之下的\"/db/restore_datas.json\"是否資料格式正確，或至Github上重新下載一個新的還原預設資料。\n");
+            CurrentOperationFunc = CommandRoutes;
+            return;
+        }
+
         let restoreDatas = JSON.parse(datas);       // 取得原始資料
 
         CurrentOperationFunc = () => {};            // 先將輸入停止動作
@@ -967,7 +972,7 @@ function CLEAR_COLLECTIONS() {
         .then(result => result ? DBModels.ServerMessage.remove(emptyCondition).exec() : false, OnError)
         .then(result => result ? DBModels.PaintingSpotlight.remove(emptyCondition).exec() : false, OnError)
         .then(result => result ? DBModels.NewTheme.remove(emptyCondition).exec() : false, OnError)
-        .then(result => result ? mongoose.connection.collection("sessions").remove(emptyCondition).exec() : false, OnError)
+        .then(result => result ? mongoose.connection.collection("sessions").remove(emptyCondition) : false, OnError)
         .then(result => result ? Promise.resolve(true) : false , OnError);
 }
 
@@ -1020,7 +1025,7 @@ function CONNECT_RELATIVE_DATAS() {
         let paintingsSpotlightDocs;
 
         return DBModels.User.find({}).select("username paintings siteMsg").exec()
-            .then(docs => docs ? (userDocs = docs, DBModels.Painting.find({}).select("artist activity").exec()) : false, OnLoadError)
+            .then(docs => docs ? (userDocs = docs, DBModels.Painting.find({}).select("name artist activity").exec()) : false, OnLoadError)
             .then(docs => docs ? (paintingDocs = docs, DBModels.Season.findOne({}).select("themes").exec()) : false, OnLoadError)
             .then(docs => docs ? (seasonDocs = docs, DBModels.Theme.find({}).select("title participants").exec()) : false, OnLoadError)
             .then(docs => docs ? (themeDocs = docs, DBModels.ParticipantInfo.find({}).select("paintingName").exec()) : false, OnLoadError)
@@ -1102,11 +1107,11 @@ function CONNECT_RELATIVE_DATAS() {
 
                 return true;
             })
-            .then(result => result ? DBModels.User.bulkWrite(userDocs.map(docs => { return { filter: { _id: docs._id }, update: docs }; })) : false)
-            .then(result => result ? DBModels.Painting.bulkWrite(paintingDocs.map(docs => { return { filter: { _id: docs._id }, update: docs };})) : false, OnSaveError)
+            .then(result => result ? DBModels.User.bulkWrite(userDocs.map(docs => { return { updateOne: { "filter": { _id: docs._id }, "update": { paintings: docs.paintings, siteMsg: docs.siteMsg } } }; })) : false)
+            .then(result => result ? DBModels.Painting.bulkWrite(paintingDocs.map(docs => { return { updateOne: { "filter": { _id: docs._id }, "update": { activity: docs.activity } } }; })) : false, OnSaveError)
             .then(result => result ? seasonDocs.save() : false, OnSaveError)
-            .then(result => result ? DBModels.Theme.bulkWrite(themeDocs.map(docs => { return { filter: { _id: docs._id}, update: docs }; })) : false, OnSaveError)
-            .then(result => result ? DBModels.PaintingSpotlight.bulkWrite(paintingsSpotlightDocs.map(docs => { return { filter: { _id: docs._id }, update: docs }; })) : false, OnSaveError)
+            .then(result => result ? DBModels.Theme.bulkWrite(themeDocs.map(docs => { return { updateOne: { "filter": { _id: docs._id}, "update": { participants: docs.participants } } }; })) : false, OnSaveError)
+            .then(result => result ? DBModels.PaintingSpotlight.bulkWrite(paintingsSpotlightDocs.map(docs => { return { updateOne: { "filter": { _id: docs._id }, "update": { paintings: docs.paintings } } }; })) : false, OnSaveError)
             .then(result => result ? true : false, OnSaveError);
     }
 }
@@ -1221,9 +1226,9 @@ function RESTORE_PUBLIC_IMAGES() {
                         console.log("刪除目錄\"%s\"時發生了錯誤。請再重新操作一次。", seasonDir + "/" + dirNames[seasonIndex - 1]);
                         res(false);
                     }
-                    else if (seasonIndex < length) { // 若仍有季目錄尚未執行目錄下檔案刪除動作，則繼續執行
+                    else if (seasonIndex < seasonLength && dirNames[seasonIndex].substr(0,1) != ".") { // 若仍有季目錄尚未執行目錄下檔案刪除動作且不為系統資料夾，則繼續執行
                         let subSeasonDir = seasonDir + "/" + dirNames[seasonIndex];
-                        
+
                         // 刪除當前的季目錄。 刪除成功後，再次呼叫ForEachSeasonDir。
                         function DeleteDir() {
                             fileSystem.rmdir(subSeasonDir, ForEachSeasonDir);
@@ -1340,11 +1345,11 @@ function RESTORE_PUBLIC_IMAGES() {
  * @param {Object} restoreData 還原的預設資料。
  * @return {Function} 一個回傳Promise物件的中介函式。若傳入的結果(result)為否，則函式回傳false。
  */
-function RESTORE_SERVER_STATUS() {
+function RESTORE_SERVER_STATUS(restoreData) {
     return function (result) {
         if (!result) return false;
         ServerStatus.status = restoreData.ServerStatus;
-        return ServerStatus.SaveStatus().catch(err => false);
+        return ServerStatus.SaveStatus().catch(err => { console.log("\n儲存伺服器狀態檔案時發生了錯誤。請稍候再嘗試一次。\n"); return false; });
     }
 }
 //#endregion ===============================================================

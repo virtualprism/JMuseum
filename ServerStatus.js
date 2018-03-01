@@ -41,7 +41,7 @@ function SaveStatus(callback) {
     }
     else if (callback === undefined) {
         return new Promise((res, rej) => {
-            fileSystem.writeFile("status.json", JSON.stringify(data), { encoding: "utf8" }, err => err ? rej(err) : res());
+            fileSystem.writeFile("status.json", JSON.stringify(data), { encoding: "utf8" }, err => err ? rej(err) : res(true));
         });
     }
     else {
