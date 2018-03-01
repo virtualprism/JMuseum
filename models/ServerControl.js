@@ -928,6 +928,7 @@ function RESTORE_SERVER() {
             .then(CONNECT_RELATIVE_DATAS())             // 將有關聯的資料做連結，並且儲存連結後的資料
             .then(RESTORE_PAINTING_IMAGES())            // 回復預設的繪圖影像資料
             .then(RESTORE_PUBLIC_IMAGES())              // 將公用的影像資料回復、刪除
+            .then(RESTORE_SERVER_STATUS(restoreDatas))  // 回復伺服器狀態並儲存
     });
 }
 
@@ -1321,6 +1322,19 @@ function RESTORE_PUBLIC_IMAGES() {
         return (new Promise(DeleteSeasonsPaintings))
             .then(result => result ? new Promise(DeleteNewThemeImages) : false)
             .then(result => result ? new Promise(DeleteUserPhotos) : false);
+    }
+}
+
+/**
+ * 還原伺服器狀態資料。
+ * @param {Object} restoreData 還原的預設資料。
+ * @return {Function} 一個回傳Promise物件的中介函式。若傳入的結果(result)為否，則函式回傳false。
+ */
+function RESTORE_SERVER_STATUS() {
+    return function (result) {
+        if (!result) return false;
+        ServerStatus.status = restoreData.ServerStatus;
+        return ServerStatus.SaveStatus().catch(err => false);
     }
 }
 
