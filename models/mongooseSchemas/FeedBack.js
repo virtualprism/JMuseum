@@ -39,3 +39,5 @@ FeedbackSchema.statics.createNewFeedback = function (data, callback) {
 FeedbackSchema.statics.removeAll = function (callback) {
     this.remove({}, callback);
 }
+
+module.exports = mongoose.model("Feedback", FeedbackSchema);
