@@ -31,3 +31,11 @@ FeedbackSchema.statics.createNewFeedback = function (data, callback) {
         callback(null, docs._id);
     });
 }
+
+/**
+ * 刪除所有的回饋資料。
+ * @param {CallbackFunction} callback 回呼函式。
+ */
+FeedbackSchema.statics.removeAll = function (callback) {
+    this.remove({}, callback);
+}
