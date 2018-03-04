@@ -33,7 +33,7 @@ html
     //- Feedback
     .container-fluid.relative
       .row
-        .col-xs-10.col-xs-push-1
+        .col-md-10.col-md-push-1.col-sm-12
           .panel.panel-default
             .panel-heading.text-largetext.text-center 意見回饋
             .panel-body.text-normal.text-center
@@ -42,7 +42,7 @@ html
               p 若你在使用這個網站中有遇到什麼問題、或想要什麼改善，又或是想要給予我們什麼樣的建議或鼓勵，都可以在下方留言喔!
               div.panel.panel-default
                 .panel-body
-                  .col-xs-8.col-xs-push-2.text-left
+                  .col-lg-8.col-lg-push-2.col-md-12.text-left
                     table.table.table-condensed
                       thead: tr: th.text-center(colspan="2") - 回饋資料 -
                       tbody
@@ -58,6 +58,7 @@ html
                     .form-group.mt-20
                       label(for="txtaContent") 內容:
                       textarea#txtaContent.form-control(rows="15", placeholder="請輸入至少16字至1000字間的內容", minlength="16", maxlength="1000")
+              #msgAlert
             .panel-footer.text-right
               button#btnFeedback.btn.btn-primary(type="button") 提交回饋
       +hasPostBarrier(hasLogin && datas.hasPostFeedback)
