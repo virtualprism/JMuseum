@@ -54,7 +54,7 @@ function CheckFeedbackData(req, res, next) {
     req.checkBody("title")
        .notEmpty()
        .withMessage("請在欄位「主旨」輸入1~64字間的回饋主旨。")
-       .len({ min: 1, max: 32 })
+       .len({ min: 1, max: 64 })
        .withMessage("欄位「主旨」限定1~64字間的回饋主旨。");
     
     // 檢查回饋資料的「內容」
@@ -71,7 +71,7 @@ function CheckFeedbackData(req, res, next) {
         }
         else {
             let errors = result.mapped();
-            let firstError = JSON.values(errors)[0];
+            let firstError = Object.values(errors)[0];
             res.json({isOK: false, field: firstError.param, message: firstError.msg});
         }
     });

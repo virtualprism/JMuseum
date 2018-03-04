@@ -1,6 +1,6 @@
-let txtSubject = $("txtSubject");
-let txtaContent = $("txtaContent");
-let msgAlert = $("msgAlert");
+let txtSubject = $("#txtSubject");
+let txtaContent = $("#txtaContent");
+let msgAlert = $("#msgAlert");
 
 $("#btnFeedback").on("click", btnFeedback_Click);
 
@@ -12,7 +12,7 @@ function btnFeedback_Click(e) {
         contentType: "application/json",
         data: JSON.stringify(data),
         timeout: 10000,
-        success: PostFeedback_OnError,
+        success: PostFeedback_Response,
         error: PostFeedback_OnError
     });
 }
@@ -26,8 +26,8 @@ function PostFeedback_Response(response) {
         window.location.replace(response.url);
     }
     else {
-        $("#msgAlert").empty();
-        $("#msgAlert").append("<div class='alert alert-danger'>" + response.message + "</div>");
+        msgAlert.empty();
+        msgAlert.append("<div class='alert alert-danger'>" + response.message + "</div>");
     }
 }
 
@@ -38,6 +38,6 @@ function PostFeedback_Response(response) {
  * @param {string} error 錯誤的描述。
  */
 function PostFeedback_OnError(jqXHR, textStatus, error) {
-    $("#msgAlert").empty();
-    $("#msgAlert").append("<div class='alert alert-danger'>無法將資料傳送至伺服端，請稍候再嘗試。</div>");
+    msgAlert.empty();
+    msgAlert.append("<div class='alert alert-danger'>無法將資料傳送至伺服端，請稍候再嘗試。</div>");
 }
