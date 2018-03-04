@@ -109,4 +109,29 @@ function SaveFeedbackDataAndResponse(req, res) {
  */
 router.post("/feedback", CheckLogin, CheckFeedbackData, SaveFeedbackDataAndResponse);
 
+/**
+ * 
+ */
+router.get("/feedback/success", (req, res) => {
+    // 若使用者有登入 且 有被標記回饋訊息成功(feedbackSuccessfully)
+    if (req.user && req.session.feedbackSuccessfully) {
+        delete req.session.feedbackSuccessfully;
+
+        dataRender.DataRender("message_form", req.url, req.session, (err, dataObj) => {
+            if (err) {
+                res.setHeader("Content-Type", "text/plain");
+                res.status(500);
+                res.end("Server side error : 500\n" + err);
+            }
+            else {
+                res.render("message_form", dataObj);
+            }
+        });
+    }
+    // 若沒有登入或沒有被標記，則重新導向至首頁
+    else {
+        res.redirect("/");
+    }
+});
+
 module.exports = router;

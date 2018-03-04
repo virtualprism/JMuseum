@@ -92,6 +92,12 @@ function MessageFormRender(renderData, route, session, callback) {
             renderData.datas.button1 = "返回";
             renderData.datas.script = "$('#btnAction1').on('click', () => window.history.back() );";
             break;
+        case route == "/feedback/success":              // 當成功處理了「意見回饋」後的跳轉頁面
+            renderData.datas.title = "您的意見資料已經成功地傳送至伺服端！";
+            renderData.datas.content = "已經接收到您寶貴的意見！若還有其他的建議，請等待約一個月後再「意見回饋」撰寫！";
+            renderData.datas.button1 = "返回首頁";
+            renderData.datas.script = "$('#btnAction1').on('click', () => window.location.replace('/') );";
+            break;
         default:                        // 其他未定義的伺服器訊息
             return callback(new Error("未定義的對應伺服訊息插值資料。"), null);
     }
