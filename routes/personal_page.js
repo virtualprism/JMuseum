@@ -188,4 +188,70 @@ router.get("/personalinfo_updated", (req, res) => {
     }
 });
 
+/**
+ * 確認使用者是否有登入。有則進入下一個程序；否則回送訊息。
+ * @param {Express.Request} req Express的Request物件。
+ * @param {Express.Response} res Express的Response物件。
+ * @param {Function} next 導向函式。
+ */
+function CheckLogin(req, res, next) {
+    if (req.user) {
+        next();
+    }
+    else {
+        res.json({ isOK: false, field: "SERVER", message: "您尚未登入，請登入後再進行操作。" });
+    }
+}
+
+/**
+ * 檢查自使用者端傳送至此的設定資料。經檢查後，
+ * 若資料全數正確，則繼續下一個程序；
+ * 若資料有誤，則將錯誤訊息回送。
+ * @param {Express.Request} req Express的Request物件。
+ * @param {Express.Response} res Express的Response物件。
+ * @param {Function} next 導向函式。
+ */
+function CheckOptionDatas(req, res, next) {
+    // 檢查「自動啟用繪圖『自動儲存』」
+    req.checkBody("autoSaveEnable")
+    .notEmpty()
+    .withMessage("傳送至伺服端的資料有缺失，請重新整理頁面或通知官方服務人員。")
+    .isBoolean()
+    .withMessage("傳送至伺服器的資料型態不正確，請重新整理頁面或通知官方服務人員。");
+
+    // 取得檢查結果
+    req.getValidationResult().then(result => {
+        if (result.isEmpty()) {
+            next();
+        }
+        else {
+            let errors = result.mapped();
+            let firstErr = Object.values(errors)[0];
+            res.json({ isOK: false, field: firstErr.param, message: firstErr.msg });
+        }
+    });
+}
+
+/**
+ * 將設定資料儲存，並且回送成功訊息。
+ * @param {Express.Request} req Express的Request物件。
+ * @param {Express.Response} res Express的Response物件。
+ */
+function SaveOptionDatas_AndResponse(req, res) {
+    // 儲存設定資料後回送訊息
+    req.user.autoSaveEnable = req.body.autoSaveEnable;
+    req.user.save(err => {
+        if (err) {
+            res.json({isOK: false, field: "SERVER", message: "伺服器內部發生錯誤，請稍候再嘗試。"});
+            return;
+        }
+        res.json({isOK: true});
+    });
+}
+
+/**
+ * 接收使用者送來的「儲存設定」資料，處理其資料並且回送訊息。
+ */
+router.post("/home/option", CheckLogin, CheckOptionDatas, SaveOptionDatas_AndResponse);
+
 module.exports = router;

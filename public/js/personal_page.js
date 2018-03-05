@@ -31,10 +31,10 @@ function btnSaveSettings_Click(e) {
         else {
             msgAlert.append("<div class='alert alert-danger'>" + response.message + "</div>");
         }
-        setTimeout(() => msgAlert.empty(), 10000);
+        setTimeout(() => msgAlert.empty(), 5000);
     })
     .catch((jqXHR, textStatus, error) => {
         msgAlert.append("<div class='alert alert-danger'>將資料傳送至伺服端時發生了錯誤，請稍後再嘗試。</div>");
-        setTimeout(() => msgAlert.empty(), 10000);
+        setTimeout(() => msgAlert.empty(), 5000);
     });
 }
