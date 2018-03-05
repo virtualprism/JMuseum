@@ -1,10 +1,15 @@
-let alertMessage;
+let alertMessage = $("#alertMessage");
+let txtRecipient = $("#txtRecipient");
 
-$(init);
+$("#btnSend").on("click", btnSend_Click);
+$("#friendList").children().on("click", friendList_Select);
 
-function init() {
-    $("button#btnSend").on("click", btnSend_Click);
-    alertMessage = $("#alertMessage");
+/**
+ * 在「收件者」欄位下「快速選擇」清單的選取事件。
+ * @param {Event} e 事件物件。
+ */
+function friendList_Select(e) {
+    txtRecipient.val(e.target.text);
 }
 
 /**
