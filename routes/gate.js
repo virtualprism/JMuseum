@@ -183,4 +183,125 @@ router.get("/signout", (req, res) => {
     res.redirect("/index");
 });
 
+/**
+ * 頁面「更變密碼」的路由處理。
+ */
+router.get("/newpw", (req, res) => {
+    // 確認使用者是否有登入
+    if (req.session.passport && req.session.passport.user) {
+        dataRender.DataRender("change_password", req.url, req.session, (err, dataObj) => {
+            if (err) {
+                res.setHeader("Content-Type", "text/plain");
+                res.status(500);
+                res.end("Server side error 500 : " + err);
+            }
+            else {
+                let errMsg = req.flash("error");
+                if (errMsg.length > 0) {
+                    dataObj.datas.errorMessage = errMsg[0];
+                }
+                res.render("change_password", dataObj);
+            }
+        });
+    }
+    // 若沒有登入，則轉跳到首頁。
+    else {
+        res.redirect("/");
+    }
+})
+
+/**
+ * 在頁面「更變密碼」下，傳送新、舊密碼來進行更新密碼的處理。
+ */
+router.post("/newpw", (req, res) => {
+    // 若使用者為登入狀態，則進一步檢查內容
+    if (req.session.passport && req.session.passport.user) {
+        let body = req.body;
+        req.checkBody("oldpw")
+           .notEmpty()
+           .withMessage("「舊密碼」為必要的欄位，請填寫您目前正使用的密碼。");
+        
+        req.checkBody("newpw")
+           .notEmpty()
+           .withMessage("「新密碼」為必要的欄位，請填寫您想要的新密碼。")
+           .not().equals(body.oldpw)
+           .withMessage("「新密碼」請勿與「舊密碼」完全一致。請更換新密碼。")
+           .matches(/(^[0-9a-zA-Z_?!@#+-]{5,16}$)/)
+           .withMessage("「新密碼」欄位僅能填寫5~16的數字、英文字母或「_?!@#+-」字元。");
+        
+        req.checkBody("newpw_confirm")
+           .notEmpty()
+           .withMessage("「確認新密碼」為必要的欄位，請填寫與「新密碼」欄位中一致的密碼。")
+           .equals(body.newpw)
+           .withMessage("「確認新密碼」欄位必須與「新密碼」欄位中的密碼一致。");
+
+        // 取得驗證結果
+        req.getValidationResult().then((result) => {
+
+            // 如果結果為空，也就是沒有任何錯誤訊息的話
+            if (result.isEmpty()) {
+                // 嘗試更變使用者的密碼
+                User.ChangePassword(req.session.passport.user, body.oldpw, body.newpw, (err, result) => {
+                    // 若有錯誤，則對錯誤做處理
+                    if (err) {
+                        if (User.IsUserNotExist(err)){
+                            // * 可改成轉跳到登入頁面 *
+                            req.flash("error", "使用者帳號已登出，請先重新登入。");
+                            res.redirect("/newpw");
+                        }
+                        // 若為其他錯誤，則告知使用者
+                        else {
+                            console.log(err);
+                            req.flash("error", "伺服器內部錯誤，請稍後再嘗試。");
+                            res.redirect("/newpw");
+                        }
+                    }
+                    // 若無錯誤，則依照結果發送訊息
+                    else {
+                        if (result) {
+                            req.session.changePW_successfuly = true;
+                            res.redirect("/newpw_success");
+                        }
+                        else {
+                            req.flash("error", "「舊密碼」輸入錯誤。請輸入正確的、當前使用的密碼。");
+                            res.redirect("/newpw");
+                        }
+                    }
+                });
+            }
+            // 若不為空，表示有誤
+            else {
+                let firstErr = Object.values(result.mapped())[0];   // 取得第一個錯誤
+                req.flash("error", firstErr.msg);                   // 將錯誤設定至flash中
+                res.redirect("/newpw");                             // 轉跳到「更新密碼」頁面
+            }
+        });
+    }
+    // 若沒有登入，則轉跳到首頁。 (暫時)
+    else {
+        res.redirect("/");
+    }
+});
+
+/**
+ * 在頁面「更變密碼」之下，成功更改密碼之後的轉跳訊息頁面。
+ */
+router.get("/newpw_success", (req, res) => {
+    // 確認是否「剛剛更新完密碼」
+    if (req.session.changePW_successfuly) {
+        delete req.session.changePW_successfuly;    // 刪除標記，以免重複
+
+        dataRender.DataRender("message_form", req.url, req.session, (err, dataObj) => {
+            if (err) {
+                res.setHeader("Content-Type", "text/plain");
+                res.status(500);
+                res.end("Server side error 500 : " + err);
+            }
+            else {
+                res.render("message_form", dataObj);
+            }
+        });
+    }
+});
+
 module.exports = router;
