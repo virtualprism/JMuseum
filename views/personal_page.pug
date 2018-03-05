@@ -105,6 +105,7 @@ mixin settingDiv(isOwner, autoSaveEnable)
         input#chkAutoSaveEnable(type="checkbox", data-toggle="toggle", checked= autoSaveEnable)
         | 自動啟用繪圖「自動儲存」
       button#btnSaveSettings.btn.btn-primary.saveSettingBtn(type="button") 儲存設定
+      #msgAlert
       hr
       button#btnDeleteAccount.btn.btn-danger(type="button") 刪除帳號
 
@@ -153,5 +154,8 @@ html
     //- Footer
     include layout/footer.pug
     //- Javascript
+    if datas.isOwner
+      script
+        | let autoSaveEnable = #{datas.autoSaveEnable};
     script(src="/js/bootstrap-toggle.js")
     script(src="/js/personal_page.js")
