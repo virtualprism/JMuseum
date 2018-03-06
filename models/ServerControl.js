@@ -931,7 +931,7 @@ function RESTORE_SERVER() {
 
         CLEAR_COLLECTIONS()                             // 先將資料庫中所有的資料清除
             .then(CREATE_RESTORING_DATAS(restoreDatas)) // 透過預設的資料來在資料庫中建立還原資料
-            .then(CONNECT_RELATIVE_DATAS())             // 將有關聯的資料做連結，並且儲存連結後的資料
+            .then(CONNECT_RELATIVE_DATAS(restoreDatas)) // 將有關聯的資料做連結，並且儲存連結後的資料
             .then(RESTORE_PAINTING_IMAGES())            // 回復預設的繪圖影像資料
             .then(RESTORE_PUBLIC_IMAGES())              // 將公用的影像資料回復、刪除
             .then(RESTORE_SERVER_STATUS(restoreDatas))  // 回復伺服器狀態並儲存
