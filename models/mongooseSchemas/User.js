@@ -2,6 +2,7 @@ const fileSystem = require("fs");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const SiteMail = require("../mongooseSchemas/SiteMail");
+const ServerStatus = require("../../ServerStatus");
 
 const Painting = require("./Painting");
 const Schema = mongoose.Schema;
@@ -140,7 +141,13 @@ UserSchema.statics.createNewUser = function (data, callback) {
                     siteMsg : [],
                     siteMail : [],
                     notices : 0,
-                    friendList : [],
+                    friendList : [{
+                        isServerMessage: false,
+                        refId: ServerStatus.status.welcomeServMsgId,
+                        postTime: new Date(),
+                        isSeen: false,
+                        isPrivate: false
+                    }],
                     autoSaveEnable : true,
                     hasPostFeedback : false,
                     hasPostNewTheme: false,
