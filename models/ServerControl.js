@@ -1003,8 +1003,10 @@ function CREATE_RESTORING_DATAS(restoreDatas) {
 
 /**
  * 將有關的回復資料做連結。
+ * @param {Object} restoreDatas 回復伺服器時所用的資料。
+ * @return {Function => Promise} Promise物件。
  */
-function CONNECT_RELATIVE_DATAS() {
+function CONNECT_RELATIVE_DATAS(restoreData) {
     /** 當讀取資料庫之資料時發生錯誤的錯誤處理。 */
     function OnLoadError(error) {
         console.log("\n讀取資料庫中的資料時發生錯誤。請檢查是否有連接上MongoDB。\n");
@@ -1104,6 +1106,9 @@ function CONNECT_RELATIVE_DATAS() {
                             themeMap["Abstract Art"].participants.push(docs._id);
                     }
                 });
+
+                // 將「伺服歡迎訊息」記錄到restoreDatas
+                restoreData.welcomeServMsgId = serverMessageDocs._id;
 
                 return true;
             })
