@@ -935,6 +935,7 @@ function RESTORE_SERVER() {
             .then(RESTORE_PAINTING_IMAGES())            // 回復預設的繪圖影像資料
             .then(RESTORE_PUBLIC_IMAGES())              // 將公用的影像資料回復、刪除
             .then(RESTORE_SERVER_STATUS(restoreDatas))  // 回復伺服器狀態並儲存
+            .then(SET_SEASON2_THEMES())                 // 設定第二季的活動與其中的主題資料
             .then(result => {                           // 最後所有動作完成時，依照結果result做印出、判斷
                 if (result) {
                     console.log("\n伺服器還原完畢！\n");
@@ -1356,6 +1357,82 @@ function RESTORE_SERVER_STATUS(restoreData) {
         ServerStatus.status = restoreData.ServerStatus;
         return ServerStatus.SaveStatus().catch(err => { console.log("\n儲存伺服器狀態檔案時發生了錯誤。請稍候再嘗試一次。\n"); return false; });
     }
+}
+
+/** 
+ * 隨機的選取五個活動來建立第二季活動。
+ */
+function SET_SEASON2_THEMES() {
+    return function (result) {
+        if (!result) return false;
+
+        // 從預設的主題資料中隨機取得5個主題資料來新增至資料庫中
+        function SetSeason2Themes(res, rej) {
+            fileSystem.readFile(global.__dirname + "/db/default_themes.json", { encoding: "utf8" }, (err, datas) => {
+                if (err) {
+                    console.log("\n取得預設的主題資料檔案時發生了錯誤。請確認該檔案是否存在，或重新下載預設主題資料檔案。\n");
+                    res(false);
+                    return;
+                }
+
+                // 嘗試將資料轉換成物件(JSON)
+                let themeDatas;
+                try {
+                    themeDatas = JSON.parse(datas);
+                }
+                catch(err) {
+                    console.log("\n轉換預設主題的資料至JSON物件時發生了錯誤。請確認該資料格式是否正確，或重新下載預設主題資料檔案。\n");
+                    return;
+                }
+
+                // 不重複隨機抽五個預設的主題
+                let pickedThemes = [];
+                let length = themeDatas.length;
+                let rndIndex;
+                for (let i = 0; i < 5; i++) {
+                    rndIndex = Math.floor(Math.random() * (length - i));
+                    pickedThemes.push(themeDatas[rndIndex]);
+                    [themeDatas[length - i - 1], themeDatas[rndIndex]] = [themeDatas[rndIndex], themeDatas[length - i - 1]];
+                }
+    
+                // 將隨機取出來的主題資料，轉為新增主題資料時的必備資料(NewThemeData)
+                let newThemeDatas = pickedThemes.map((theme, index) => {
+                    return { order: index,
+                             title: theme.title,
+                             narrative: theme.narrative,
+                             image: theme.image,
+                             originator: theme.sponsor,
+                             participants: [],
+                             views: 0,
+                             commentCount: 0 };
+                });
+
+                // 將這些新資料加入至資料庫中
+                DBModels.Theme.insertMany(newThemeDatas).then(
+                    themeDocs => {
+                        let newSeasonData = { nth: 2, themes: themeDocs.map(docs => docs._id), startTime: new Date(), endTime: null };
+                        let newSeasonDocs = DBModels.Season(newSeasonData);
+                        // 將新的資料儲存
+                        newSeasonDocs.save(err => {
+                            if (err) {
+                                console.log("\n儲存第二季活動資料時發生了錯誤。請確認是否有連接至MongoDB。\n");
+                                res(false);
+                            }
+                            else {
+                                res(true);
+                            }
+                        });
+                    },
+                    error => {
+                        console.log("\n將新的主題資料儲存至資料庫時發生了錯誤。請確認是否有連接至MongoDB。\n");
+                        res(false);
+                    }
+                );
+            });
+        }
+
+        return new Promise(SetSeason2Themes);
+    };
 }
 //#endregion ===============================================================
 
