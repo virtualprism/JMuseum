@@ -79,7 +79,7 @@ SeasonSchema.statics.GetGalleryNeedInfo = function (callback) {
  */
 SeasonSchema.statics.GetThemePageNeedInfo = function (callback) {
     let result = {currentSeason: null, lastSeason: null};
-    let currentSeasonPopulate = {path: "themes", select: {"order": 1, "title": 1, "narrative": 1, "imageURL": 1, "originator": 1, "participentCount": 1, "views": 1, "commentCount": 1}};
+    let currentSeasonPopulate = {path: "themes", select: {"order": 1, "title": 1, "narrative": 1, "imageURL": 1, "originator": 1, "participants": 1, "views": 1, "commentCount": 1}};
     let lastSeasonPopulate = {path: "themes", select: {"order": 1, "title": 1, "originator": 1}};
     let currentNthSeason = ServerStatus.status.currentSeason;
     // 以nth尋找最新的一季，在選擇其中的「nth」與「themes」欄位
