@@ -138,16 +138,16 @@ UserSchema.statics.createNewUser = function (data, callback) {
                     },
                     tags : [],
                     paintings : [],
-                    siteMsg : [],
-                    siteMail : [],
-                    notices : 0,
-                    friendList : [{
+                    siteMsg : [{
                         isServerMessage: false,
                         refId: ServerStatus.status.welcomeServMsgId,
                         postTime: new Date(),
                         isSeen: false,
                         isPrivate: false
                     }],
+                    siteMail : [],
+                    notices : 0,
+                    friendList : [],
                     autoSaveEnable : true,
                     hasPostFeedback : false,
                     hasPostNewTheme: false,

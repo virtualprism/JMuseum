@@ -12,9 +12,11 @@ const mongodb = require("mongodb");
 const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo')(session);
 const pug = require("pug");                             // *** Pug的版本為 2.0.0-beta6 ，原先所安裝的Pug無法使用"include" 與 "extended" 指令
+const DDOS = require('ddos');
 
 const ServerStatus = require("./ServerStatus");
 const ResourceManager = require("./models/ResourceManager");
+const ddos = new DDOS({burst:10, limit:15});
 
 // 讀取伺服器狀態檔案
 ServerStatus.LoadStatus((err) => { 
@@ -29,9 +31,11 @@ let app = express();
 
 global.__dirname = __dirname;       // 在全域之下定義這個專案的根目錄路徑
 
+// mongodb://localhost/JMuseum
+
 // Connect to Database
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/JMuseum', { useMongoClient: true });
+mongoose.connect('mongodb://sample:cake4you@ds157383.mlab.com:57383/dblab', { useMongoClient: true });
 mongoConnection = mongoose.connection;
 mongoConnection.on('error', console.error.bind(console, 'connection error:'));
 mongoConnection.once('open', function() {
@@ -58,6 +62,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(ResourceManager(__dirname + "/db"));
+app.use(ddos.express);
 
 // Setting Server Routes
 app.use("/", require("./routes/main"));

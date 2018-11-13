@@ -1443,7 +1443,34 @@ function SET_SEASON2_THEMES() {
  * 測試用的指令動作。
  */
 function Test() {
-    
+    DBModels.Season.aggregate(
+        [
+            { $match: { "nth": 2 }},
+            { $project: {
+                "nth": 1,
+                "themes": 1
+            }},
+            { $unwind: "$themes" },
+            { $lookup: {
+                from: "themes",
+                localField: "themes",
+                foreignField: "_id",
+                as: "themes"
+            }},
+            { $unwind: "$themes" },
+            { $group: { 
+                "_id": "$_id",
+                "nth": { $last: "$nth" },
+                "themes": { $push: "$themes" }
+            }},
+            { $sort: { "nth": 1 } }
+        ]
+    )
+    .then(result => {
+        console.log(result);
+        console.log(result[0]);
+        console.log(result[0].themes);
+    });
 }
 
 

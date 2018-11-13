@@ -150,8 +150,8 @@ function CheckPaintingInfo(req, res, next) {
     // 接下來檢查圖畫作品是否符合指定的格式
     if (regexCheckType.test(imgData)) {
         let base64Data = imgData.replace(/^data:image\/png;base64,/, "");
-        let dataBuffer = new Buffer(base64Data, "base64");
-
+        let dataBuffer = Buffer.from(base64Data, "base64"); //new Buffer(base64Data, "base64");
+        
         // 以Buffer的方式讀取Base64的影像檔案
         Jimp.read(dataBuffer, (err, image) => {
             if (err) return res.send({isOK: false, field: "painting_image", message: "無法解析傳送至伺服端的圖畫影像，您是否是以非正當的方式儲存圖畫呢？若有問題請回饋給我們。"});
@@ -223,6 +223,7 @@ function UpdatePaintingInfo(res, body, image, isFinish) {
                 res.send({isOK: false, field: "SERVER", message: "指定的畫作並不存在。請檢查目前畫作是否正確或是否屬於您的。"});
             }
             else {
+                console.log(err);
                 res.send(GeneralSavingErrorMessage);
             }
             return;
@@ -255,9 +256,14 @@ function CreateNewPainting(res, body, userDocs, image, isFinish) {
         viewAuthority: body.view_authority,
         isFinished: isFinish
     };
+
+    try {
     // 以 newPaintingData 來建立新畫作資料
     Painting.createNewPainting(newPaintingData, (err, result) => {
-        if (err) return res.send(GeneralSavingErrorMessage);
+        if (err) {
+            console.log(err);
+            return res.send(GeneralSavingErrorMessage);
+        }
 
         let imageFileName = "./db/paintings/" + result.id + ".png"; // 定義儲存的檔案名稱
         userDocs.paintings.push(result._id);                        // 將畫作id增加至使用者資料的paintings中
@@ -268,7 +274,10 @@ function CreateNewPainting(res, body, userDocs, image, isFinish) {
 
             // 儲存使用者資料
             userDocs.save((err) => {
-                if (err) return res.send(GeneralSavingErrorMessage);
+                if (err) {
+                    console.log(err);
+                    return res.send(GeneralSavingErrorMessage);
+                }
 
                 // 所有資料儲存成功，回送成功訊息。若為完成畫作，則送出跳轉頁面網址。
                 if (isFinish)
@@ -278,6 +287,9 @@ function CreateNewPainting(res, body, userDocs, image, isFinish) {
             });
         });
     });
+    } catch (ex) {
+        console.log(ex);
+    }
 }
 
 /**
