@@ -13,7 +13,6 @@ const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo')(session);
 const pug = require("pug");                             // *** Pug的版本為 2.0.0-beta6 ，原先所安裝的Pug無法使用"include" 與 "extended" 指令
 const DDOS = require('ddos');
-
 const ServerStatus = require("./ServerStatus");
 const ResourceManager = require("./models/ResourceManager");
 const ddos = new DDOS({burst:10, limit:15});
