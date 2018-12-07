@@ -173,20 +173,24 @@ router.get("/login", (req, res) => {
  */
 router.post("/login", 
 function(req,res,next){
-    console.log(req.body);
+    console.log(req.body.username+" try to login then ... ");
+    req.body.password
     var secretKey = "6LdCbHoUAAAAAKaOWjrWeyBoaUUgpFmYMJV9iOB8";
     request.post({url:'https://www.google.com/recaptcha/api/siteverify', form: {secret:secretKey,response:req.body.userToken}}, function(err,httpResponse,body){ 
         if (err) {
-            res.send('Faild :', err);
+            console.log("Faild with "+err);
+            res.send('Failed :', err);
             return;
         }
         else
         {
             var bodyObj=JSON.parse(body);
+            console.log("score : " + bodyObj.score);
             if(bodyObj['success'])
                 next();
             else
             {
+                console.log("Failed with reCaptcha check and redirect the loginpage.")
                 req.flash("error","reCaptcha驗證失敗");
                 res.redirect("/login");
             }
@@ -194,6 +198,7 @@ function(req,res,next){
         }
      });
 },passport.authenticate("login", {failureRedirect: "/login", failureFlash: true }), (req, res) => {
+    console.log(req.body.username+" successfully loged in");
     res.redirect("/");
 });
 
