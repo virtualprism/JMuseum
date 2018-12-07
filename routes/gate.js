@@ -175,7 +175,6 @@ router.post("/login",
 function(req,res,next){
     console.log(req.body);
     var secretKey = "6LdCbHoUAAAAAKaOWjrWeyBoaUUgpFmYMJV9iOB8";
-    console.log({secret:secretKey,response:req.body['userToken']});
     request.post({url:'https://www.google.com/recaptcha/api/siteverify', form: {secret:secretKey,response:req.body.userToken}}, function(err,httpResponse,body){ 
         if (err) {
             res.send('Faild :', err);
@@ -188,6 +187,7 @@ function(req,res,next){
                 next();
             else
             {
+                req.flash("error","reCaptcha驗證失敗");
                 res.redirect("/login");
             }
                
