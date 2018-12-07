@@ -9,7 +9,34 @@ const fieldFirstName_Validator = /^([a-zA-Z\u2E80-\u2FDF\u3190-\u319F\u3400-\u4D
 const fieldEmail_Validator = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const fieldUsername_Validator = /^([a-zA-z]{1,1})([0-9a-zA-z]{3,15})$/;
 const fieldPassword_Validator = /(^[0-9a-zA-Z_?!@#+-]{5,16}$)/;
-
+/**
+ * 註冊頁面Token確認
+ */
+router.get("/signup/:token",(req,res)=>{
+        console.log(req);
+        var secretKey = "6LdCbHoUAAAAAKaOWjrWeyBoaUUgpFmYMJV9iOB8";
+        request.post({url:'https://www.google.com/recaptcha/api/siteverify', form: {secret:secretKey,response:req.params.token}}, function(err,httpResponse,body){ 
+            if (err) {
+                console.log("Faild with "+err);
+                res.send('Failed :'+ err);
+                return;
+            }
+            else
+            {
+                var bodyObj=JSON.parse(body);
+                console.log("score : " + bodyObj.score);
+                if(!bodyObj['success'])
+                {
+                    console.log("Failed with reCaptcha check and redirect the loginpage.")
+                    res.send("error reCaptcha驗證失敗");
+                    
+                }
+                else
+                    res.send("");
+            }
+         });
+    
+});
 /**
  * 頁面「註冊」的路由處理。
  */
@@ -176,7 +203,7 @@ function(req,res,next){
     console.log(req.body.username+" try to login then ... ");
     req.body.password
     var secretKey = "6LdCbHoUAAAAAKaOWjrWeyBoaUUgpFmYMJV9iOB8";
-    request.post({url:'https://www.google.com/recaptcha/api/siteverify', form: {secret:secretKey,response:req.body.userToken}}, function(err,httpResponse,body){ 
+    request.post({url:'https://www.google.com/recaptcha/api/siteverify', form: {secret:secretKey,response:req.params.token}}, function(err,httpResponse,body){ 
         if (err) {
             console.log("Faild with "+err);
             res.send('Failed :', err);
