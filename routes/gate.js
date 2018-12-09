@@ -201,9 +201,8 @@ router.get("/login", (req, res) => {
 router.post("/login", 
 function(req,res,next){
     console.log(req.body.username+" try to login then ... ");
-    req.body.password
     var secretKey = "6LdCbHoUAAAAAKaOWjrWeyBoaUUgpFmYMJV9iOB8";
-    request.post({url:'https://www.google.com/recaptcha/api/siteverify', form: {secret:secretKey,response:req.params.token}}, function(err,httpResponse,body){ 
+    request.post({url:'https://www.google.com/recaptcha/api/siteverify', form: {secret:secretKey,response:req.body.userToken}}, function(err,httpResponse,body){ 
         if (err) {
             console.log("Faild with "+err);
             res.send('Failed :', err);
@@ -213,7 +212,7 @@ function(req,res,next){
         {
             var bodyObj=JSON.parse(body);
             console.log("score : " + bodyObj.score);
-            if(bodyObj['success'])
+            if(bodyObj['success']&&bodyObj.score>=0.5)
                 next();
             else
             {
