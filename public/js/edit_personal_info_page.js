@@ -94,6 +94,7 @@ function serverResult(respone) {
     // 若錯誤為文字資料，則標示指定的錯誤
     clearAllInputState();
     formTextFields[respone.field].addClass("has-error");
+    setAlert(respone.message);
 }
 
 /**
@@ -110,8 +111,10 @@ function sendFailed(jqXHR, status, error) {
  * 清除所有狀態。
  */
 function clearAllInputState() {
-    for (let elem of formTextFields)
-        element.removeClass("has-error");
+    formTextFields["lastName"].removeClass("has-error");
+    formTextFields["firstName"].removeClass("has-error");
+    formTextFields["nickname"].removeClass("has-error");
+    formTextFields["motto"].removeClass("has-error");
 }
 
 /**

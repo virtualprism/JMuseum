@@ -26,16 +26,17 @@ ServerStatus.LoadStatus((err) => {
 
 // 伺服與網頁應用的變數定義
 var mongoConnection, database;
-let port = 12001;
+let port = 12010;
 let app = express();
 
 global.__dirname = __dirname;       // 在全域之下定義這個專案的根目錄路徑
 
 // mongodb://localhost/JMuseum
+// mongodb://sample:cake4you@ds157383.mlab.com:57383/dblab
 
 // Connect to Database
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://sample:cake4you@ds157383.mlab.com:57383/dblab', { useMongoClient: true });
+mongoose.connect('mongodb://localhost/JMuseum', { useNewUrlParser: true });
 mongoConnection = mongoose.connection;
 mongoConnection.on('error', console.error.bind(console, 'connection error:'));
 mongoConnection.once('open', function() {
@@ -86,15 +87,17 @@ function ExitApplication() {
         console.log("Server closed ..\n");
 
         // 與MongoDB結束連線
-        mongoose.connection.close().then(() => {
+        let disconnection = mongoose.connection.close().then(() => {
             console.log("MongoDB disconnected ..\n");
         });
 
         // 儲存伺服器狀態檔案
-        ServerStatus.SaveStatus((err) => {
-            console.log(err ? "Save server status file failed. Please confirm whether the file is in the root directory of this project.\n" :
-                              "Successfully saved server status file.\n");
-        });
+        let savingStatus = ServerStatus.SaveStatus()
+            .then(() => console.log("Successfully saved server status file.\n"))
+            .catch(() => console.log("Save server status file failed. Please confirm whether the file is in the root directory of this project.\n"));
+
+        Promise.all([disconnection, savingStatus])
+            .then(() => process.exit());
     });
 }
 
