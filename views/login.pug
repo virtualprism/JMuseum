@@ -2,6 +2,7 @@ doctype html
 html
   head
     include layout/head.pug
+    script(src='https://www.google.com/recaptcha/api.js?render=6LdCbHoUAAAAAM78zwhm7yP2iwgL11VjVb5UyhDC')
   body
     include layout/navbar.pug
     .container-fluid.relative
@@ -20,8 +21,28 @@ html
         if datas.isLoginFailed
           .alert.alert-danger
             | #{datas.loginMessage}
-        button.btn.btn-lg.btn-primary.btn-block(type="submit") 登入
+        button.btn.btn-lg.btn-primary.btn-block(type="submit" disabled) 驗證中...
     //- Footer
     include layout/footer.pug
+    script.
+      grecaptcha.ready(
+        function() 
+        {
+          grecaptcha.execute('6LdCbHoUAAAAAM78zwhm7yP2iwgL11VjVb5UyhDC', {action: 'login'}).then(
+            function(token) 
+            {
+              window.token=token;
+              var ip=document.createElement("input");
+              ip.name=ip.id="userToken";
+              ip.style.display='none';
+              ip.value=token;ip.for="userToken";
+              document.querySelector(".form-signin").append(ip);
+               var btn=document.querySelector(".form-signin .btn[type='submit']");
+          btn.disabled=false;
+          btn.innerText="登入";
+            }
+          );
+         
+        });
     //- Javascript
     script(src="js/login_page.js")

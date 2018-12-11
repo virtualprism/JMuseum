@@ -2,6 +2,7 @@ doctype html
 html
   head
     include layout/head.pug
+    script(src='https://www.google.com/recaptcha/api.js?render=6LdCbHoUAAAAAM78zwhm7yP2iwgL11VjVb5UyhDC')
   body
     include layout/navbar.pug
     .container-fluid.relative
@@ -47,7 +48,7 @@ html
             a.rightSideText.text-normal(herf="#", data-toggle="modal", data-target="#myModal") JMuseum 條款
         hr
         #divErrorMessages
-        button#btnSubmit.btn.btn-lg.btn-primary.btn-block(type="submit", tabindex="7") 註冊
+        button#btnSubmit.btn.btn-lg.btn-primary.btn-block(type="submit", tabindex="7",disabled) 驗證中...
       //- "JMuseum Terms" Dialog
       #myModal.modal.fade(tabindex="-1", role="dialog", aria-labelledby="exampleModalLabel", aria-hidden="true")
         .modal-dialog.modal-lg(role="document")
@@ -78,3 +79,30 @@ html
     include layout/footer.pug
     //- Javascript
     script(src="js/signup_page.js")
+    script.
+        grecaptcha.ready(
+        function() 
+        {
+          grecaptcha.execute('6LdCbHoUAAAAAM78zwhm7yP2iwgL11VjVb5UyhDC', {action: 'login'}).then(
+            function(token) 
+            {
+              console.log("signup/"+token);
+              $.get("signup/"+token,resp=>
+              {
+                console.log(resp);
+                if(resp!=="")
+                {
+                  alert(resp);
+                  location.reload();
+                }
+                else
+                {
+                  var btn=document.querySelector(".form-signin .btn[type='submit']");
+                  btn.disabled=false;
+                  btn.innerText="註冊";
+                }
+              });
+            }
+          );
+        });
+    //- Javascript
